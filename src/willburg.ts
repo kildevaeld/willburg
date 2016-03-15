@@ -8,6 +8,7 @@ import {ServiceTypes, Factories} from './metadata';
 import {DIContainer, factory} from 'stick.di';
 import {Container} from './container'
 import {RouteFactory} from './factories/route-factory'
+import {Server} from 'http';
 
 const Router = require('koa-router');
 const Mount = require('koa-mount');
@@ -101,7 +102,7 @@ export class Willburg extends Koa implements IApp {
       let cName = '$controller:' + name;
       this._container.registerSingleton(cName, controller);
       
-      let $route: RouteFactory = this._container.get(Factories.Route);
+      let $route = this._container.get(Factories.Route);
       
       for (let i = 0, ii = routes.length; i < ii; i++) {
         let route = routes[i];
@@ -135,7 +136,7 @@ export class Willburg extends Koa implements IApp {
       return this;
   }
 
-  listen (port:number) {
+  listen (port:number): Server {
     this.use(this.router.routes());
     return super.listen(port);
   }
