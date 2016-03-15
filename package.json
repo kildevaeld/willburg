@@ -1,0 +1,24 @@
+{
+  "name": "willburg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.0.0-alpha.3",
+    "koa-router": "^7.0.1"
+  },
+  "devDependencies": {
+    "babel-preset-es2015-without-regenerator": "^1.0.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-plumber": "^1.1.0",
+    "gulp-typescript": "^2.12.1",
+    "merge2": "^1.0.1",
+    "mz": "^2.3.1"
+  }
+}
