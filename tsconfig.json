@@ -1,11 +1,26 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "noImplicitAny": false,
-        "sourceMap": false
-    },
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "rootDir": "src"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "files": [
+    "src/container.ts",
+    "src/decorators.ts",
+    "src/interfaces.ts",
+    "src/metadata.ts",
+    "src/utils.ts",
+    "src/willburg.ts",
+    "src/factories/index.ts",
+    "src/factories/route-factory.ts",
+    "src/tasks/controllers.ts",
+    "src/tasks/index.ts",
+    "src/tasks/initializers.ts",
+    "src/tasks/routes.ts"
+  ]
 }
