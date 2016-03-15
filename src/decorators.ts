@@ -1,13 +1,14 @@
 
 import 'reflect-metadata';
-
+import {MiddlewareFunc} from './interfaces';
 
 import {MetaKeys, setService, ServiceTypes, getService, RouteDefinition} from './metadata';
 
+export {inject, autoinject} from 'stick.di';
 
-
-function defineRoute(method: string, route: string): MethodDecorator {
+function defineRoute(method: string, route: string, middlewares: MiddlewareFunc[]): MethodDecorator {
     return function (target:any, key: string, desc:PropertyDescriptor) {
+        middlewares = middlewares||[];
         //console.log(target.constructor)
         let ctor = target.constructor;
         let routes = getService<RouteDefinition[]>(ctor, ServiceTypes.Route);
@@ -17,39 +18,41 @@ function defineRoute(method: string, route: string): MethodDecorator {
         routes.push({
             method: method,
             path: route,
-            action: key
+            action: key,
+            middleware: middlewares
         })
         
         setService(ctor, ServiceTypes.Route, routes);
     };
 }
 
-export function namespace(path:string): ClassDecorator {
+export function namespace(path:string, ...middleware:MiddlewareFunc[]): ClassDecorator {
     return function (target) {
         setService(target, ServiceTypes.Namespace, {
-            path: path
+            path: path,
+            middlewares: middleware
         });
     }
 }
 
-export function get(route: string): MethodDecorator {
-    return defineRoute('get', route);
+export function get(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('get', route, middleware);
 }
 
-export function post(route: string): MethodDecorator {
-    return defineRoute('post',route);
+export function post(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('post',route, middleware);
 }
 
-export function put(route: string): MethodDecorator {
-    return defineRoute('put',route);
+export function put(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('put',route, middleware);
 }
 
-export function del(route: string): MethodDecorator {
-    return defineRoute('delete', route);
+export function del(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('delete', route, middleware);
 }
 
-export function patch(route: string): MethodDecorator {
-    return defineRoute('patch', route);
+export function patch(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('patch', route, middleware);
 }
 
 
@@ -61,6 +64,6 @@ export function controller(name?:string): ClassDecorator {
 
 export function service(name?:string): ClassDecorator {
     return function (target: Function) {
-        Reflect.defineMetadata(MetaKeys.Service, name||target.name, target);
+        Reflect.defineMetadata(MetaKeys.Service, name||target, target);
     };
 }

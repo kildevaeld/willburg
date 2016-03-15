@@ -5,7 +5,7 @@ const gulp = require('gulp'),
   babel = require('gulp-babel'),
   merge = require('merge2');
 
-
+const config = require('../config');
 const project = tsc.createProject('tsconfig.json');
 
 gulp.task('typescript', () => {
@@ -14,9 +14,10 @@ gulp.task('typescript', () => {
   .pipe(tsc(project))
 
   let js = result.js
-  /*.pipe(babel({
-    presets: ['es2015-without-regenerator']
-  }))*/
+  .pipe(babel({
+    //presets: ['es2015-without-regenerator'],
+    plugins: config.babel
+  }))
 
   return merge([
     js.pipe(gulp.dest('lib')),

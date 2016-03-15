@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es2015",
     "noImplicitAny": false,
     "sourceMap": false,
     "rootDir": "src"
@@ -12,15 +12,21 @@
   "files": [
     "src/container.ts",
     "src/decorators.ts",
+    "src/index.ts",
     "src/interfaces.ts",
     "src/metadata.ts",
     "src/utils.ts",
     "src/willburg.ts",
     "src/factories/index.ts",
     "src/factories/route-factory.ts",
+    "src/factories/view-factory.ts",
+    "src/middlewares/static.ts",
+    "src/middlewares/views.ts",
     "src/tasks/controllers.ts",
     "src/tasks/index.ts",
     "src/tasks/initializers.ts",
-    "src/tasks/routes.ts"
+    "src/tasks/routes.ts",
+    "src/tasks/services.ts",
+    "src/tasks/views.ts"
   ]
 }

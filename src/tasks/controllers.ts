@@ -17,13 +17,17 @@ export class Controllers implements ITask {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
             
             if (typeof mod === 'function') {
+                if (!isService(mod, ServiceTypes.Controller)) {
+                    return debug('Not a controller')
+                }
+                app.register(mod);
                 
             } else {
                 for (let key in mod) {
                     let m = mod[key]
                     
                     if (!isService(m, ServiceTypes.Controller)) {
-                        debug('not a controller');
+                        return debug('not a controller');
                     }
                     
                     app.register(m);

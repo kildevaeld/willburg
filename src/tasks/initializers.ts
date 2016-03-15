@@ -14,6 +14,7 @@ export class Initializers implements ITask {
       try {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
             if (typeof mod === 'function') {
+                debug('running initializer %s', path)
                 await mod(app);
             } else {
                 for (let k in mod) {
@@ -25,8 +26,7 @@ export class Initializers implements ITask {
             
         });
       } catch (e) {
-          debug('path %s doest not exists', path);
+          debug('path %s doest not exists', path, e);
       }
-
   }
 }

@@ -6,3 +6,4 @@ container.registerInstance('container', container);
 container.makeGlobal();
 
 export const Container = container;
+

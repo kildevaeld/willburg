@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-
+import {MiddlewareFunc} from './interfaces';
 export enum ServiceTypes {
     Controller,
     Route,
@@ -16,15 +16,27 @@ export const MetaKeys = {
 } 
 
 export const Factories = {
-    RouteFactory: Symbol('route::factory')
+    Route: Symbol('route::factory'),
+    View: Symbol('view::factory')
 };
+
+export const Variables = {
+    ViewRoot: Symbol('view::root'),
+    ViewEngine: Symbol('view::engine')
+}
 
 export interface RouteDefinition {
     path: string;
     method: string;
     action: string;
+    middleware: MiddlewareFunc[];
 }
 
+export interface NamespaceDefinition {
+    path: RegExp;
+    method: string;
+    middleware: MiddlewareFunc[];
+}
 
 export function isService(target:any, service: ServiceTypes): boolean {
     return Reflect.hasOwnMetadata(MetaKeys[ServiceTypes[service]], target);

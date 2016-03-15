@@ -15,4 +15,4 @@ export function RouteFactory ( $container: DIContainer) {
 }
 
 factory()(RouteFactory);
-Container.registerTransient(Factories.RouteFactory, RouteFactory);
+Container.registerTransient(Factories.Route, RouteFactory);
