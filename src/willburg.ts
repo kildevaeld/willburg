@@ -59,9 +59,9 @@ export class Willburg extends Koa implements IApp {
     this._tasks = [
       new tasks.Services(),
       new tasks.Initializers(),
+      new tasks.Views(),
       new tasks.Controllers(),
-      new tasks.Routes(),
-      new tasks.Views()
+      new tasks.Routes()
     ];
   }
 
