@@ -1,0 +1,11 @@
+import 'reflect-metadata';
+import { MiddlewareFunc } from './interfaces';
+export { inject, autoinject } from 'stick.di';
+export declare function namespace(path: string, ...middleware: MiddlewareFunc[]): ClassDecorator;
+export declare function get(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function post(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function put(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function del(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function patch(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function controller(name?: string): ClassDecorator;
+export declare function service(name?: string): ClassDecorator;
