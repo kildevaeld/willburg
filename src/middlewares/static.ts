@@ -41,7 +41,12 @@ export function Static (root:string|string[], options:StaticOptions={}): Middlew
             if (ctx.method === 'HEAD' || ctx.method === 'GET') {
                 for (let i = 0; i < len; i++ ) {
                     opts.root = paths[i];
-                    if ((await send(ctx, ctx.path, opts)) != null) return;
+                    let ret = await send(ctx, ctx.path, opts)
+                    
+                    if (ret != null)  {
+                        debug('file sent: %s', ret);
+                        return;
+                    }
                 }
             }
             
@@ -56,7 +61,13 @@ export function Static (root:string|string[], options:StaticOptions={}): Middlew
             
             for (let i = 0; i < len; i++ ) {
                 opts.root = paths[i];
-                if ((await send(ctx, ctx.path, opts)) != null) return;
+                let ret = await send(ctx, ctx.path, opts)
+                
+                if (ret != null) {
+                    debug('file sent: %s', ret);
+                    return;
+                }
+                
             }
             
         }
