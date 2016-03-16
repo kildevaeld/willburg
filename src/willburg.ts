@@ -2,6 +2,8 @@ import './factories/index';
 
 import * as Koa from 'koa';
 import {IRouter, IApp, ITask, MiddlewareFunc} from './interfaces';
+import * as iface from './interfaces';
+
 import * as tasks from './tasks';
 import * as metadata from './metadata';
 import {ServiceTypes, Factories} from './metadata';
@@ -80,6 +82,10 @@ export class Willburg extends Koa implements IApp {
         ]);
     }
 
+    use (fn: MiddlewareFunc) {
+        super.use(fn);
+        return this;
+    }
 
     register(some: any) {
         if (metadata.isService(some, metadata.ServiceTypes.Controller)) {

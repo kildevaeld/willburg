@@ -22,7 +22,7 @@ Object.defineProperties(_context, {
         }
     },
     
-    "body": {
+    "readBody": {
         value: function (accepts:string[] = ['json', 'urlencoded']): Promise<any> {
             switch (this.is(accepts)) {
             case 'json':

@@ -26,6 +26,7 @@ export declare class Willburg extends Koa implements IApp {
     settings: WillburgOptions;
     container: DIContainer;
     constructor(options?: WillburgOptions);
+    use(fn: MiddlewareFunc): this;
     register(some: any): void;
     registerService(service: Function): void;
     registerController(controller: Function): void;

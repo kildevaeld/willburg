@@ -1,6 +1,7 @@
 
 import 'reflect-metadata';
 import {MiddlewareFunc} from './interfaces';
+
 export enum ServiceTypes {
     Controller,
     Route,

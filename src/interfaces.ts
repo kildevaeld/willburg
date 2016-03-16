@@ -3,18 +3,20 @@
 import * as Koa from 'koa';
 import {Willburg} from './willburg';
 import {DIContainer} from 'stick.di';
-
+import {SessionObject} from './middlewares/session';
 
 export interface Context extends Koa.Context {
     app: Willburg;
     params: { [key: string]: any };
     isXHR: boolean;
-    body<T>(accepts: string[]): Promise<T>;
+    readBody<T>(accepts?: string[]): Promise<T>;
+    session?:SessionObject|(() => Promise<SessionObject>);
 }
 
 export interface MiddlewareFunc {
-    (ctx: Koa.Context, next?: Function): any;
+    (ctx: Context, next?: Function): any;
 }
+
 
 export interface IApp {
     settings: any;

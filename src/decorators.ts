@@ -106,6 +106,9 @@ export function body(schema:joi.SchemaMap): MethodDecorator {
     return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
         let method = descriptor.value;
         descriptor.value =  async function (ctx: Context, next?: Function) {
+            
+            let body = await ctx.readBody();
+            
             try {
                 let query = await validate(joiSchema, ctx.query);
                 ctx.query = query;
