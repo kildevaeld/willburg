@@ -5,6 +5,7 @@ export declare class Bootstrap {
     _tasks: ITask[];
     length: number;
     constructor(app: Willburg);
-    add(task: ITask | ITask[], ...tasks: ITask[]): this;
+    push(task: ITask | ITask[], ...tasks: ITask[]): this;
+    pushFront(task: ITask | ITask[], ...tasks: ITask[]): this;
     run(): Promise<void>;
 }

@@ -69,7 +69,7 @@ export class Willburg extends Koa implements IApp {
 
         this._router = new Router();
         this._boot = new Bootstrap(this);
-        this._boot.add([
+        this._boot.push([
             new tasks.Middlewares(),
             new tasks.Services(),
             new tasks.Initializers(),

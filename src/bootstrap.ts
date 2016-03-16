@@ -12,13 +12,23 @@ export class Bootstrap {
 
     constructor(private app: Willburg) { }
 
-    add(task:ITask|ITask[],...tasks: ITask[]) {
+    push(task:ITask|ITask[],...tasks: ITask[]) {
         if (!Array.isArray(task)) task = [<ITask>task];
         tasks = (<ITask[]>task).concat(tasks);
         for (let i = 0, ii = tasks.length; i < ii; i++) {
             debug('add tasks %s', tasks[i].name||tasks[i]);
             this._tasks.push(tasks[i]);
         }
+        return this;
+    }
+    
+    pushFront(task:ITask|ITask[],...tasks: ITask[]) { 
+        if (!Array.isArray(task)) task = [<ITask>task];
+        tasks = (<ITask[]>task).concat(tasks);
+        for (let i = 0, ii = tasks.length; i < ii; i++) {
+            debug('add tasks %s', tasks[i].name||tasks[i]);
+        }
+        this._tasks = tasks.concat(this._tasks);
         return this;
     }
 
