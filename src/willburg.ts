@@ -182,7 +182,7 @@ export class Willburg extends Koa implements IApp {
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
         options = options||{paths:{}, middlewares:{}};   
-        Object.assign({paths:{}, middlewares:{}}, options);
+        options = Object.assign({paths:{}, middlewares:{}}, options);
         return options;
     }
 
