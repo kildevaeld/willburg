@@ -7,6 +7,7 @@ export interface Context extends Koa.Context {
     params: {
         [key: string]: any;
     };
+    isXHR: boolean;
 }
 export interface MiddlewareFunc {
     (ctx: Koa.Context, next?: Function): any;

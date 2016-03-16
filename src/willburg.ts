@@ -11,6 +11,7 @@ import {RouteFactory} from './factories/route-factory'
 import {Server} from 'http';
 import {Bootstrap} from './bootstrap';
 import * as Debug from 'debug';
+import {Context} from './context'
 
 const debug = Debug('willburg');
 
@@ -62,7 +63,7 @@ export class Willburg extends Koa implements IApp {
 
         factory()(RouteFactory);
 
-        
+        this.context = Object.create(Context);
         this._opts = this._normalizeOptions(options);
         this._container = Container //.createChild();
         this._container.registerInstance('container', this._container);
