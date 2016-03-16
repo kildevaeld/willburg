@@ -26,6 +26,7 @@ export class Routes implements ITask {
         });
       } catch (e) {
           debug('path %s doest not exists', path);
+          throw e;
       }
   }
 }

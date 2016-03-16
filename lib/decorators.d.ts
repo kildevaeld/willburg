@@ -7,5 +7,6 @@ export declare function post(route: string, ...middleware: MiddlewareFunc[]): Me
 export declare function put(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function del(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function patch(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function use(...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function controller(name?: string): ClassDecorator;
 export declare function service(name?: string): ClassDecorator;

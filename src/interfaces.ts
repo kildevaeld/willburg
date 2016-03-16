@@ -4,8 +4,11 @@ import * as Koa from 'koa';
 import {Willburg} from './willburg';
 import {DIContainer} from 'stick.di';
 
-export type Context = Koa.Context;
 
+export interface Context extends Koa.Context {
+    app: Willburg;    
+    params: {[key: string]: any};
+}
 
 export interface MiddlewareFunc {
   (ctx: Koa.Context, next?: Function): any;

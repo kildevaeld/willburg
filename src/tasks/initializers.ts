@@ -26,7 +26,9 @@ export class Initializers implements ITask {
             
         });
       } catch (e) {
+          
           debug('path %s doest not exists', path, e);
+          throw e;
       }
   }
 }

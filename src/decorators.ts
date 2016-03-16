@@ -55,12 +55,17 @@ export function patch(route: string, ...middleware:MiddlewareFunc[]): MethodDeco
     return defineRoute('patch', route, middleware);
 }
 
+export function use(...middleware:MiddlewareFunc[]): MethodDecorator {
+    return defineRoute('use', null, middleware);
+}
+
 
 export function controller(name?:string): ClassDecorator {
     return function(target:Function) {
         Reflect.defineMetadata(MetaKeys.Controller, name||target.name, target);
     };
 }
+
 
 export function service(name?:string): ClassDecorator {
     return function (target: Function) {

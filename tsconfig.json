@@ -21,6 +21,7 @@
     "src/factories/index.ts",
     "src/factories/route-factory.ts",
     "src/factories/view-factory.ts",
+    "src/middlewares/index.ts",
     "src/middlewares/static.ts",
     "src/middlewares/views.ts",
     "src/tasks/controllers.ts",

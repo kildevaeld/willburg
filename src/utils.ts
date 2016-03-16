@@ -14,14 +14,14 @@ export async function requireDir(path: string, iterator: (mod: any, path?: strin
         let fp = Path.join(path, files[i])
 
         let stat = await fs.stat(fp);
-
+        
         if (stat.isDirectory()) {
             await requireDir(fp, iterator);
             continue;
         }
 
         let mod = require(fp);
-
+        
         await iterator(mod, fp);
 
     }

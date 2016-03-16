@@ -44,8 +44,8 @@ export function ViewFactory ( root: string, defaultEngine: string ) {
     
     root = Path.resolve(root);
     
-    return async function (path: string, locals: any, engine?:any): Promise<string> {
-    
+    return async function (path: string, locals: any = {}, engine?:any): Promise<string> {
+        
         let ext = (Path.extname(path) || '.' +(engine||defaultEngine)).slice(1);
         
         let {rel, abs} = await getPaths(root, path, ext);

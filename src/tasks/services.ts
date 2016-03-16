@@ -16,7 +16,7 @@ export class Services implements ITask {
       
       try {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
-            
+           
             if (typeof mod === 'function') {
                 if (!isService(mod, ServiceTypes.Service)) {
                     return debug('Not a Service')
@@ -27,7 +27,8 @@ export class Services implements ITask {
             } else {
                 for (let key in mod) {
                     let m = mod[key]
-                    
+                   
+                    if (typeof m === 'symbol') continue;
                     if (!isService(m, ServiceTypes.Service)) {
                         return debug('not a service');
                     }
@@ -39,7 +40,7 @@ export class Services implements ITask {
         });
       } catch (e) {
           debug('path %s doest not exists: %s', path, e);
-          
+          throw e;
       }
   }
 }

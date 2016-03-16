@@ -25,7 +25,7 @@ export class Controllers implements ITask {
             } else {
                 for (let key in mod) {
                     let m = mod[key]
-                    
+                    if (typeof m === 'symbol') continue;
                     if (!isService(m, ServiceTypes.Controller)) {
                         return debug('not a controller');
                     }
@@ -37,7 +37,7 @@ export class Controllers implements ITask {
         });
       } catch (e) {
           debug('path %s doest not exists: %s', path, e);
-          
+          throw e;
       }
   }
 }
