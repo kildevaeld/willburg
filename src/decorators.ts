@@ -1,15 +1,13 @@
 
 import 'reflect-metadata';
 import {MiddlewareFunc} from './interfaces';
-
 import {MetaKeys, setService, ServiceTypes, getService, RouteDefinition} from './metadata';
-
 export {inject, autoinject} from 'stick.di';
 
 function defineRoute(method: string, route: string, middlewares: MiddlewareFunc[]): MethodDecorator {
     return function (target:any, key: string, desc:PropertyDescriptor) {
         middlewares = middlewares||[];
-        //console.log(target.constructor)
+        
         let ctor = target.constructor;
         let routes = getService<RouteDefinition[]>(ctor, ServiceTypes.Route);
         
@@ -30,7 +28,7 @@ export function namespace(path:string, ...middleware:MiddlewareFunc[]): ClassDec
     return function (target) {
         setService(target, ServiceTypes.Namespace, {
             path: path,
-            middlewares: middleware
+            middleware: middleware
         });
     }
 }
@@ -55,8 +53,12 @@ export function patch(route: string, ...middleware:MiddlewareFunc[]): MethodDeco
     return defineRoute('patch', route, middleware);
 }
 
-export function use(...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('use', null, middleware);
+export function use(path:string|MiddlewareFunc, ...middleware:MiddlewareFunc[]): MethodDecorator {
+    if (typeof path === 'function') {
+        middleware = [<MiddlewareFunc>path].concat(middleware);
+        path = null;
+    }
+    return defineRoute('use', <string>path, middleware);
 }
 
 

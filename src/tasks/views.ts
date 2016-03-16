@@ -18,7 +18,7 @@ export class Views implements ITask {
       
       if (!con.hasHandler(Variables.ViewRoot)) {
         app.container.registerInstance(Variables.ViewRoot, path);    
-      } else if (!con.hasHandler(Variables.ViewEngine)) {
+      } if (!con.hasHandler(Variables.ViewEngine)) {
         app.container.registerInstance(Variables.ViewEngine, 'html');    
       }
 

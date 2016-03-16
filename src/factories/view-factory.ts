@@ -47,7 +47,6 @@ export function ViewFactory ( root: string, defaultEngine: string ) {
     return async function (path: string, locals: any = {}, engine?:any): Promise<string> {
         
         let ext = (Path.extname(path) || '.' +(engine||defaultEngine)).slice(1);
-        
         let {rel, abs} = await getPaths(root, path, ext);
         
         let fp = Path.resolve(abs, rel);
@@ -56,14 +55,10 @@ export function ViewFactory ( root: string, defaultEngine: string ) {
             let str = await  fs.readFile(fp, 'utf8');
             return str;
         } else {
-            
             engine = ext;
-            // Implement map
-            
-            return await consolidate[engine](fp, locals);
-            
+            // Implement engine/ext map
+            return await consolidate[engine](fp, locals); 
         }
-    
     };
 }
 

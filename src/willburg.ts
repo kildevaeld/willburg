@@ -12,7 +12,7 @@ import {Server} from 'http';
 
 const Router = require('koa-router');
 const Mount = require('koa-mount');
-
+const Compose = require('koa-compose');
 
 export interface WillburgPaths {
     initializers?: string;
@@ -125,9 +125,10 @@ export class Willburg extends Koa implements IApp {
             router[route.method](route.path, ...middlewares);
         }
 
+
         if (router !== this._router) {
             let middlewares = (namespace.middleware || []).concat([router.routes(), router.allowedMethods()]);
-            this._router.use(namespace.path, ...middlewares);
+            this.router.use(namespace.path, ...middlewares);
         }
 
     }
