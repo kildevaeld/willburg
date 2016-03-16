@@ -66,7 +66,7 @@ export class Willburg extends Koa implements IApp {
         this._opts = this._normalizeOptions(options);
         this._container = Container //.createChild();
         this._container.registerInstance('container', this._container);
-        this._container.registerInstance(Willburg, Willburg);
+        this._container.registerInstance(Willburg, this);
         this._router = new Router();
         this._boot = new Bootstrap(this);
         this._boot.push([
