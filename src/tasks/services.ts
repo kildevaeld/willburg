@@ -41,7 +41,11 @@ export class Services implements ITask {
             
         });
       } catch (e) {
-          debug('path %s doest not exists: %s', path, e);
+          if (e.code == 'ENOENT') {
+             debug('path %s doest not exists: %s', path, e);
+             return;
+          }
+         
           throw e;
       }
   }
