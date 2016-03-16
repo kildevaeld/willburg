@@ -9,6 +9,7 @@ export interface Context extends Koa.Context {
     app: Willburg;
     params: { [key: string]: any };
     isXHR: boolean;
+    body<T>(accepts: string[]): Promise<T>;
 }
 
 export interface MiddlewareFunc {

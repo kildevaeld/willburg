@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import { MiddlewareFunc } from './interfaces';
+import * as joi from 'joi';
+export declare const Joi: typeof joi;
 export { inject, autoinject } from 'stick.di';
 export declare function namespace(path: string, ...middleware: MiddlewareFunc[]): ClassDecorator;
 export declare function get(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
@@ -10,3 +12,5 @@ export declare function patch(route: string, ...middleware: MiddlewareFunc[]): M
 export declare function use(path: string | MiddlewareFunc, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function controller(name?: string): ClassDecorator;
 export declare function service(name?: string): ClassDecorator;
+export declare function query(schema: joi.SchemaMap): MethodDecorator;
+export declare function body(schema: joi.SchemaMap): MethodDecorator;

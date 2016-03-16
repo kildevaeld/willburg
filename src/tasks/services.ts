@@ -17,13 +17,14 @@ export class Services implements ITask {
       
       try {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
-           
+            let found = 0;
             if (typeof mod === 'function') {
                 if (!isService(mod, ServiceTypes.Service)) {
                     return debug('Not a Service')
                 }
                 
                 app.register(mod);
+                found++;
                 debug('register service %s', mod.name);
             } else {
                 for (let key in mod) {
@@ -31,14 +32,15 @@ export class Services implements ITask {
                    
                     if (typeof m === 'symbol') continue;
                     if (!isService(m, ServiceTypes.Service)) {
-                        return debug('not a service');
+                        continue;
                     }
                     
                     app.register(m);
+                    found++;
                     debug('register service %s', m.name);
                 }
             }
-            
+            debug('found %d services in %s', found, path);
         });
       } catch (e) {
           if (e.code == 'ENOENT') {

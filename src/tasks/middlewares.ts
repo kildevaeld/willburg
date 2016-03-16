@@ -11,9 +11,9 @@ export class Middlewares implements ITask {
   name = "Middlewares";
   async run(app: IApp): Promise<void> {
       
-      for (let key of ['ErrorHandler']) {
+      for (let key of ['ErrorHandler', 'Session']) {
           
-          let opts = app.settings.middlewares[key];
+          let opts = app.settings.middlewares[key.toLowerCase()];
           debug('injecting middleware: %s: %j', key.toLowerCase(), opts);
           app.use(middlewares[key](opts));
       }

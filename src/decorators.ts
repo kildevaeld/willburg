@@ -1,7 +1,13 @@
 
 import 'reflect-metadata';
-import {MiddlewareFunc} from './interfaces';
+import {MiddlewareFunc, Context} from './interfaces';
+
 import {MetaKeys, setService, ServiceTypes, getService, RouteDefinition} from './metadata';
+
+import * as joi from 'joi';
+
+export const Joi = joi;
+
 export {inject, autoinject} from 'stick.di';
 
 function defineRoute(method: string, route: string, middlewares: MiddlewareFunc[]): MethodDecorator {
@@ -73,4 +79,51 @@ export function service(name?:string): ClassDecorator {
     return function (target: Function) {
         Reflect.defineMetadata(MetaKeys.Service, name||target, target);
     };
+}
+
+export function query(schema:joi.SchemaMap): MethodDecorator {
+    
+    let joiSchema = joi.object().keys(schema);
+    
+    return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
+        let method = descriptor.value;
+        descriptor.value =  async function (ctx: Context, next?: Function) {
+            try {
+                let query = await validate(joiSchema, ctx.query);
+                ctx.query = query;
+            } catch (e) {
+                ctx.throw(400, e.toString());
+            }
+            
+            return await method.call(this, ctx, next);
+        };
+    }
+}
+
+export function body(schema:joi.SchemaMap): MethodDecorator {
+    let joiSchema = joi.object().keys(schema);
+    
+    return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
+        let method = descriptor.value;
+        descriptor.value =  async function (ctx: Context, next?: Function) {
+            try {
+                let query = await validate(joiSchema, ctx.query);
+                ctx.query = query;
+            } catch (e) {
+                ctx.throw(400, e.toString());
+            }
+            
+            return await method.call(this, ctx, next);
+        };
+    }
+}
+
+
+function validate (schema: joi.Schema, value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+       joi.validate(value, schema, (err, value) => {
+          if (err) return reject(err);
+          resolve(value); 
+       });
+    });
 }

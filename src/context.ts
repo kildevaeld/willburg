@@ -2,7 +2,7 @@
 import * as Koa from 'koa';
 import * as i from './interfaces';
 const _context = require('koa/lib/context');
-
+const parse = require('co-body');
 
 export const Context: i.Context = _context; 
 
@@ -19,6 +19,18 @@ Object.defineProperties(_context, {
         get: function () {
            let xhr = this.req.get('X-Requested-With');
             return xhr === 'XMLHttpRequest'; 
+        }
+    },
+    
+    "body": {
+        value: function (accepts:string[] = ['json', 'urlencoded']): Promise<any> {
+            switch (this.is(accepts)) {
+            case 'json':
+                return parse.json(this.req);
+            case 'urlencoded':
+                return parse.form(this.req);
+            }
+            return null;
         }
     }
 });

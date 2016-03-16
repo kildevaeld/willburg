@@ -8,6 +8,7 @@ export interface Context extends Koa.Context {
         [key: string]: any;
     };
     isXHR: boolean;
+    body<T>(accepts: string[]): Promise<T>;
 }
 export interface MiddlewareFunc {
     (ctx: Koa.Context, next?: Function): any;
