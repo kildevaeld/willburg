@@ -16,6 +16,7 @@ export interface IApp {
     router: IRouter;
     register(a: any): any;
     container: DIContainer;
+    use(MiddlewareFunc: any): any;
 }
 export interface IRouter {
     routes(): MiddlewareFunc;
@@ -29,5 +30,6 @@ export interface IRouter {
     use(path: string | RegExp | MiddlewareFunc, ...middlewares: MiddlewareFunc[]): IRouter;
 }
 export interface ITask {
+    name?: string;
     run(app: IApp): Promise<void>;
 }

@@ -11,6 +11,7 @@ import {isService, ServiceTypes} from '../metadata';
 const debug = Debug('willburg:tasks:services');
 
 export class Services implements ITask {
+    name = "Services";
   async run(app: IApp): Promise<void> {
       let path = app.settings.paths.services|| "services";
       
@@ -23,7 +24,7 @@ export class Services implements ITask {
                 }
                 
                 app.register(mod);
-                
+                debug('register service %s', mod.name);
             } else {
                 for (let key in mod) {
                     let m = mod[key]
@@ -34,6 +35,7 @@ export class Services implements ITask {
                     }
                     
                     app.register(m);
+                    debug('register service %s', m.name);
                 }
             }
             

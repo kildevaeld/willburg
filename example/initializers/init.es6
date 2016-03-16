@@ -1,8 +1,8 @@
 
-const m  = require('../../lib/middlewares/static').Static
+import {Static, ErrorHandler} from '../../lib/middlewares'
 
 module.exports = async function init (app) {
-
-    app.mount('/public', m(['public','controllers']));
+    app.use(ErrorHandler());
+    app.mount('/public', Static(['public','controllers']));
     
 }

@@ -11,6 +11,7 @@
     "node_modules"
   ],
   "files": [
+    "src/bootstrap.ts",
     "src/container.ts",
     "src/decorators.ts",
     "src/index.ts",
@@ -18,15 +19,17 @@
     "src/metadata.ts",
     "src/utils.ts",
     "src/willburg.ts",
-    "src/factories/index.ts",
     "src/factories/route-factory.ts",
+    "src/factories/index.ts",
     "src/factories/view-factory.ts",
+    "src/middlewares/errors.ts",
     "src/middlewares/index.ts",
     "src/middlewares/static.ts",
     "src/middlewares/views.ts",
-    "src/tasks/controllers.ts",
     "src/tasks/index.ts",
+    "src/tasks/controllers.ts",
     "src/tasks/initializers.ts",
+    "src/tasks/middlewares.ts",
     "src/tasks/routes.ts",
     "src/tasks/services.ts",
     "src/tasks/views.ts"

@@ -7,6 +7,7 @@ import * as Debug from 'debug';
 const debug = Debug('willburg:tasks:initializers');
 
 export class Initializers implements ITask {
+ name = "Initializers";
   async run(app: IApp): Promise<void> {
       
       let path = app.settings.paths.initializers|| "initializers";

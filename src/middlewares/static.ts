@@ -1,8 +1,11 @@
 
 import {MiddlewareFunc, Context} from '../interfaces';
 import {resolve} from 'path';
+import * as Debug from 'debug';
+import * as assert from 'assert';
 
 const send = require('koa-send')
+const debug = Debug('willburg:middleware:static');
 
 export interface StaticOptions {
     hidden?: boolean;
@@ -28,6 +31,11 @@ export function Static (root:string|string[], options:StaticOptions={}): Middlew
     let handler: MiddlewareFunc;
     
     let len = paths.length;
+    
+    assert(Array.isArray(root) && len !== 0, "Root required");
+    
+    debug('static "%s" %j', root, opts);
+    
     if (!opts.defer) {
         handler =  async function (ctx: Context, next?:Function): Promise<any> {
             if (ctx.method === 'HEAD' || ctx.method === 'GET') {

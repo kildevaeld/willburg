@@ -14,4 +14,9 @@ export default class HomeController {
         ctx.type = "text/html";
         ctx.body = await this.render('index');
     }
+    
+    @decorators.get('/throw')
+    async throw(ctx) {
+        throw new Error('fuckit')
+    }
 }

@@ -8,25 +8,26 @@ import * as Debug from 'debug';
 const debug = Debug('willburg:tasks:routes');
 
 export class Routes implements ITask {
-  async run(app: IApp): Promise<void> {
-      let path = app.settings.paths.routes|| "routes";
-      
-      try {
-        await requireDir(path, async (mod:any, path:string): Promise<void> => {
-            if (typeof mod === 'function') {
-                await mod(app);
-            } else {
-                for (let k in mod) {
-                    if (typeof mod[k] === 'function') {
-                        await mod[k](app.router, app);
+    name = "Routes";
+    async run(app: IApp): Promise<void> {
+        let path = app.settings.paths.routes || "routes";
+
+        try {
+            await requireDir(path, async (mod: any, path: string): Promise<void> => {
+                if (typeof mod === 'function') {
+                    await mod(app);
+                } else {
+                    for (let k in mod) {
+                        if (typeof mod[k] === 'function') {
+                            await mod[k](app.router, app);
+                        }
                     }
                 }
-            }
-            
-        });
-      } catch (e) {
-          debug('path %s doest not exists', path);
-          throw e;
-      }
-  }
+
+            });
+        } catch (e) {
+            debug('path %s doest not exists', path);
+            throw e;
+        }
+    }
 }

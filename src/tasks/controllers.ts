@@ -10,9 +10,11 @@ import {isService, ServiceTypes} from '../metadata';
 const debug = Debug('willburg:tasks:controllers');
 
 export class Controllers implements ITask {
+  name = 'Controllers';
+  path:string;
   async run(app: IApp): Promise<void> {
       let path = app.settings.paths.controllers|| "controllers";
-      
+      this.path = path;
       try {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
             
@@ -21,6 +23,7 @@ export class Controllers implements ITask {
                     return debug('Not a controller')
                 }
                 app.register(mod);
+                debug('register controller %s', mod.name)
                 
             } else {
                 for (let key in mod) {
@@ -31,6 +34,7 @@ export class Controllers implements ITask {
                     }
                     
                     app.register(m);
+                    debug('register controller %s', m.name)
                 }
             }
             
@@ -39,5 +43,9 @@ export class Controllers implements ITask {
           debug('path %s doest not exists: %s', path, e);
           throw e;
       }
+  }
+  
+  toString (): string {
+      return `[Controllers path: ${this.path}]`;
   }
 }

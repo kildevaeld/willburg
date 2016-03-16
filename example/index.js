@@ -14,3 +14,9 @@ let app = new Willburg();
 app.startAndListen(3000).catch( e => {
     console.log(e.stack)
 })
+
+app.on('error', (e) => {
+    
+    console.error(e.stack)
+    process.exit(-1)
+})

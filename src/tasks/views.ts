@@ -10,6 +10,7 @@ import {isService, ServiceTypes,  Variables} from '../metadata';
 const debug = Debug('willburg:tasks:views');
 
 export class Views implements ITask {
+    name = "Views";
   async run(app: IApp): Promise<void> {
       let path = app.settings.paths.views|| "views";
       path = resolve(path);

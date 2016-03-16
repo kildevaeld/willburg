@@ -19,6 +19,7 @@ export interface IApp {
     router: IRouter;
     register(a:any);
     container: DIContainer;
+    use(MiddlewareFunc)
 }
 
 export interface IRouter {
@@ -35,6 +36,7 @@ export interface IRouter {
 }
 
 export interface ITask {
+  name?:string;
   run(app: IApp): Promise<void>;
 }
 

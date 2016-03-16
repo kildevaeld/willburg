@@ -9,6 +9,10 @@ import {DIContainer, factory} from 'stick.di';
 import {Container} from './container'
 import {RouteFactory} from './factories/route-factory'
 import {Server} from 'http';
+import {Bootstrap} from './bootstrap';
+import * as Debug from 'debug';
+
+const debug = Debug('willburg');
 
 const Router = require('koa-router');
 const Mount = require('koa-mount');
@@ -22,15 +26,23 @@ export interface WillburgPaths {
 }
 
 export interface WillburgOptions {
-    paths?: WillburgPaths
+    paths?: WillburgPaths;
+    middlewares?: {
+        [key: string]: any
+    };
 }
 
 export class Willburg extends Koa implements IApp {
     private _router: IRouter;
     private _opts: WillburgOptions
-    private _tasks: ITask[]
+    //private _tasks: ITask[]
     private _container: DIContainer;
-
+    private _boot: Bootstrap;
+    
+    get boot (): Bootstrap {
+        return this._boot;
+    }
+    
     get router(): IRouter {
         return this._router;
     }
@@ -50,20 +62,23 @@ export class Willburg extends Koa implements IApp {
 
         factory()(RouteFactory);
 
-        this._opts = options;
-        this._opts.paths = this._normalizePaths(this._opts.paths);
+        
+        this._opts = this._normalizeOptions(options);
         this._container = Container //.createChild();
         this._container.registerInstance('container', this._container);
 
         this._router = new Router();
-        this._tasks = [
+        this._boot = new Bootstrap(this);
+        this._boot.add([
+            new tasks.Middlewares(),
             new tasks.Services(),
             new tasks.Initializers(),
             new tasks.Views(),
             new tasks.Controllers(),
             new tasks.Routes()
-        ];
+        ]);
     }
+
 
     register(some: any) {
         if (metadata.isService(some, metadata.ServiceTypes.Controller)) {
@@ -132,16 +147,24 @@ export class Willburg extends Koa implements IApp {
         }
 
     }
-
+    
     mount(path: string, middleware: MiddlewareFunc | Willburg | Koa) {
         this.use(Mount(path, middleware));
     }
 
+    /**
+     * Start willburg. This will run the bootstrapper.
+     * Task order of execution is:
+     * Middlewares, Services, Initializers, Views, Controllers, Routes
+     * @return {Promise<Willburg>}
+     */
     async start(): Promise<Willburg> {
-        for (let i = 0, ii = this._tasks.length; i < ii; i++) {
-            await this._tasks[i].run(this);
-        }
-
+        if (this.boot == null) return this;
+        debug('starting willburg');
+        await this.boot.run();
+        this._boot = void 0;
+        debug('willburg started');
+        
         return this;
     }
 
@@ -157,8 +180,10 @@ export class Willburg extends Koa implements IApp {
     }
 
 
-    private _normalizePaths(paths: WillburgPaths): WillburgPaths {
-        return paths ? paths : {};
+    private _normalizeOptions(options: WillburgOptions): WillburgOptions {
+        options = options||{paths:{}, middlewares:{}};   
+        Object.assign(options, {paths:{}, middlewares:{}});
+        return options;
     }
 
 }
