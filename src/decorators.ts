@@ -143,6 +143,31 @@ export function body(schema:joi.SchemaMap): MethodDecorator {
     }
 }
 
+export function params(schema:joi.SchemaMap, shouldThrow:boolean = false): MethodDecorator {
+    let joiSchema = joi.object().keys(schema);
+    
+    return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
+        let method = descriptor.value;
+        descriptor.value =  async function (ctx: Context, next?: Function) {
+            
+            let params = ctx.params;
+            
+            try {
+                let query = await validate(joiSchema, params);
+                ctx.query = query;
+            } catch (e) {
+                if (shouldThrow) {
+                    ctx.throw(400, e.toString());    
+                }
+                console.error('e', e.toString(), params);
+                return next();
+            }
+            
+            return await method.call(this, ctx, next);
+        };
+    }
+}
+
 
 function validate (schema: joi.Schema, value: any, options:any = {allowUnknown:true}): Promise<any> {
     return new Promise((resolve, reject) => {
