@@ -87,7 +87,7 @@ export function task(name?:string): ClassDecorator {
     }
 }
 
-export function query(schema:joi.SchemaMap): MethodDecorator {
+export function query(schema:joi.SchemaMap, options?:any): MethodDecorator {
     
     let joiSchema = joi.object().keys(schema);
     
@@ -95,7 +95,7 @@ export function query(schema:joi.SchemaMap): MethodDecorator {
         let method = descriptor.value;
         descriptor.value =  async function (ctx: Context, next?: Function) {
             try {
-                let query = await validate(joiSchema, ctx.query);
+                let query = await validate(joiSchema, ctx.query, options);
                 ctx.query = query;
             } catch (e) {
                 ctx.throw(400, e.toString());
@@ -128,9 +128,9 @@ export function body(schema:joi.SchemaMap): MethodDecorator {
 }
 
 
-function validate (schema: joi.Schema, value: any): Promise<any> {
+function validate (schema: joi.Schema, value: any, options:any = {allowUnknown:true}): Promise<any> {
     return new Promise((resolve, reject) => {
-       joi.validate(value, schema, (err, value) => {
+       joi.validate(value, schema, options ,(err, value) => {
           if (err) return reject(err);
           resolve(value); 
        });

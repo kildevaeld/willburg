@@ -13,5 +13,5 @@ export declare function use(path: string | MiddlewareFunc, ...middleware: Middle
 export declare function controller(name?: string): ClassDecorator;
 export declare function service(name?: any): ClassDecorator;
 export declare function task(name?: string): ClassDecorator;
-export declare function query(schema: joi.SchemaMap): MethodDecorator;
+export declare function query(schema: joi.SchemaMap, options?: any): MethodDecorator;
 export declare function body(schema: joi.SchemaMap): MethodDecorator;
