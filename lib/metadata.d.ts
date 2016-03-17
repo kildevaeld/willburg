@@ -5,12 +5,14 @@ export declare enum ServiceTypes {
     Route = 1,
     Namespace = 2,
     Service = 3,
+    Task = 4,
 }
 export declare const MetaKeys: {
     Route: symbol;
     Controller: symbol;
     Namespace: symbol;
     Service: symbol;
+    Task: symbol;
 };
 export declare const Factories: {
     Route: symbol;
@@ -27,10 +29,10 @@ export interface RouteDefinition {
     middleware: MiddlewareFunc[];
 }
 export interface NamespaceDefinition {
-    path: RegExp;
+    path: string;
     method: string;
     middleware: MiddlewareFunc[];
 }
-export declare function isService(target: any, service: ServiceTypes): boolean;
+export declare function isService(target: any, service?: ServiceTypes): boolean;
 export declare function getService<T>(target: any, service: ServiceTypes): T;
 export declare function setService<T>(target: any, type: ServiceTypes, service: T): void;

@@ -11,6 +11,7 @@ export declare function del(route: string, ...middleware: MiddlewareFunc[]): Met
 export declare function patch(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function use(path: string | MiddlewareFunc, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function controller(name?: string): ClassDecorator;
-export declare function service(name?: string): ClassDecorator;
+export declare function service(name?: any): ClassDecorator;
+export declare function task(name?: string): ClassDecorator;
 export declare function query(schema: joi.SchemaMap): MethodDecorator;
 export declare function body(schema: joi.SchemaMap): MethodDecorator;

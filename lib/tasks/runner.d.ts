@@ -1,8 +1,9 @@
 import { Willburg } from '../willburg';
 import { ITask } from '../interfaces';
-export declare class Directory implements ITask {
+export declare class Runner implements ITask {
+    private fns;
+    private remove;
     name: string;
-    paths: string[];
-    constructor(...paths: string[]);
+    constructor(fns: Function[], remove?: boolean);
     run(app: Willburg): Promise<void>;
 }

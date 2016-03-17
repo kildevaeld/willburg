@@ -15,7 +15,7 @@ export class Routes implements ITask {
         try {
             await requireDir(path, async (mod: any, path: string): Promise<void> => {
                 if (typeof mod === 'function') {
-                    await mod(app);
+                    await mod(app.router, app);
                 } else {
                     for (let k in mod) {
                         if (typeof mod[k] === 'function') {

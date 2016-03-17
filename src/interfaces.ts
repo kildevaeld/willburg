@@ -36,7 +36,7 @@ export interface IRouter {
     patch(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;
     head(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;
     use(path: string | RegExp | MiddlewareFunc, ...middlewares: MiddlewareFunc[]): IRouter;
-
+    prefix(prefix);
 }
 
 export interface ITask {

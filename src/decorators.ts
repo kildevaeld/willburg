@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import {MiddlewareFunc, Context} from './interfaces';
+import {MiddlewareFunc, Context, ITask} from './interfaces';
 
 import {MetaKeys, setService, ServiceTypes, getService, RouteDefinition} from './metadata';
 
@@ -75,10 +75,16 @@ export function controller(name?:string): ClassDecorator {
 }
 
 
-export function service(name?:string): ClassDecorator {
+export function service(name?:any): ClassDecorator {
     return function (target: Function) {
         Reflect.defineMetadata(MetaKeys.Service, name||target, target);
     };
+}
+
+export function task(name?:string): ClassDecorator {
+    return function (target: Function) {
+        Reflect.defineMetadata(MetaKeys.Task, name||target, target);
+    }
 }
 
 export function query(schema:joi.SchemaMap): MethodDecorator {

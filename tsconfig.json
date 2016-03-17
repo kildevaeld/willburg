@@ -12,8 +12,8 @@
   ],
   "files": [
     "src/bootstrap.ts",
-    "src/container.ts",
     "src/context.ts",
+    "src/container.ts",
     "src/decorators.ts",
     "src/index.ts",
     "src/interfaces.ts",
@@ -28,11 +28,11 @@
     "src/middlewares/session.ts",
     "src/middlewares/static.ts",
     "src/middlewares/views.ts",
-    "src/tasks/controllers.ts",
     "src/tasks/index.ts",
     "src/tasks/initializers.ts",
     "src/tasks/middlewares.ts",
     "src/tasks/routes.ts",
+    "src/tasks/runner.ts",
     "src/tasks/services.ts",
     "src/tasks/views.ts"
   ]

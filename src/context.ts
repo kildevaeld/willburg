@@ -32,5 +32,15 @@ Object.defineProperties(_context, {
             }
             return null;
         }
+    },
+    
+    links: {
+        value: function (links) {
+            var link = this.response.get('Link') || '';
+            if (link) link += ', ';
+            return this.response.set('Link', link + Object.keys(links).map(function(rel){
+            return '<' + links[rel] + '>; rel="' + rel + '"';
+            }).join(', '));
+        }
     }
 });

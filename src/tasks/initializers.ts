@@ -12,6 +12,7 @@ export class Initializers implements ITask {
       
       let path = app.settings.paths.initializers|| "initializers";
       
+      let fns : Function[] = [];
       try {
         await requireDir(path, async (mod:any, path:string): Promise<void> => {
             if (typeof mod === 'function') {

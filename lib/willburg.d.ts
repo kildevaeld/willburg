@@ -18,6 +18,7 @@ export interface WillburgOptions {
 }
 export declare class Willburg extends Koa implements IApp {
     private _router;
+    private _routers;
     private _opts;
     private _container;
     private _boot;
@@ -41,4 +42,5 @@ export declare class Willburg extends Koa implements IApp {
     startAndListen(port: number): Promise<Willburg>;
     listen(port: number): Server;
     private _normalizeOptions(options);
+    private _initTasks();
 }

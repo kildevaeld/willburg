@@ -6,14 +6,16 @@ export enum ServiceTypes {
     Controller,
     Route,
     Namespace,
-    Service
+    Service,
+    Task
 }
 
 export const MetaKeys = {
     Route: Symbol("route"),
     Controller: Symbol('controller'),
     Namespace: Symbol('namespace'),
-    Service: Symbol('service')
+    Service: Symbol('service'),
+    Task: Symbol("task")
 } 
 
 export const Factories = {
@@ -34,13 +36,19 @@ export interface RouteDefinition {
 }
 
 export interface NamespaceDefinition {
-    path: RegExp;
+    path: string;
     method: string;
     middleware: MiddlewareFunc[];
 }
 
-export function isService(target:any, service: ServiceTypes): boolean {
-    return Reflect.hasOwnMetadata(MetaKeys[ServiceTypes[service]], target);
+export function isService(target:any, service?: ServiceTypes): boolean {
+    var check = (service: ServiceTypes) => {
+        return Reflect.hasOwnMetadata(MetaKeys[ServiceTypes[service]], target);
+    }
+    if (service != null) {
+        return check(service);
+    }
+    return check(ServiceTypes.Controller) || check(ServiceTypes.Task) || check(ServiceTypes.Service);
 }
 
 export function getService<T>(target:any, service:ServiceTypes): T {
