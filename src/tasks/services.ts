@@ -33,7 +33,7 @@ export class Directory implements ITask {
                     debug('path %s doest not exists: %s', this.paths[i], e);
                     continue;
                 }
-                debug("Error %s", e)
+                debug("Error %s in %s", e, e.path)
                 throw e;
             }
         }

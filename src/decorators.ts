@@ -10,7 +10,7 @@ export const Joi = joi;
 
 export {inject, autoinject} from 'stick.di';
 
-function defineRoute(method: string, route: string, middlewares: MiddlewareFunc[]): MethodDecorator {
+function defineRoute(method: string[], route: string[], middlewares: MiddlewareFunc[]): MethodDecorator {
     return function (target:any, key: string, desc:PropertyDescriptor) {
         middlewares = middlewares||[];
         
@@ -40,23 +40,23 @@ export function namespace(path:string, ...middleware:MiddlewareFunc[]): ClassDec
 }
 
 export function get(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('get', route, middleware);
+    return defineRoute(['GET'], [route], middleware);
 }
 
 export function post(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('post',route, middleware);
+    return defineRoute(['POST'],[route], middleware);
 }
 
 export function put(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('put',route, middleware);
+    return defineRoute(['PUT'],[route], middleware);
 }
 
 export function del(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('delete', route, middleware);
+    return defineRoute(['DELETE'], [route], middleware);
 }
 
 export function patch(route: string, ...middleware:MiddlewareFunc[]): MethodDecorator {
-    return defineRoute('patch', route, middleware);
+    return defineRoute(['PATCH'], [route], middleware);
 }
 
 export function use(path:string|MiddlewareFunc, ...middleware:MiddlewareFunc[]): MethodDecorator {
@@ -64,9 +64,25 @@ export function use(path:string|MiddlewareFunc, ...middleware:MiddlewareFunc[]):
         middleware = [<MiddlewareFunc>path].concat(middleware);
         path = null;
     }
-    return defineRoute('use', <string>path, middleware);
+    return defineRoute(['USE'], [<string>path], middleware);
 }
 
+export function route(path:string|string[], methods:string|string[], ...middlewares: MiddlewareFunc[]): MethodDecorator {
+    if (typeof methods === 'string') methods = [<string>methods];
+    let m: string[] = <string[]>methods;
+    m = m.map( e => e.toUpperCase());
+    path = Array.isArray(path) ? path : [path];
+    methods = Array.isArray(methods) ? methods : [methods];
+    
+    return defineRoute(<string[]>methods, <string[]>path, middlewares);
+    
+}
+
+export function options(options:any): ClassDecorator {
+    return function (target: Function) {
+        Reflect.defineMetadata(MetaKeys.Options, options, target);
+    }
+}
 
 export function controller(name?:string): ClassDecorator {
     return function(target:Function) {

@@ -3,6 +3,21 @@ import * as Koa from 'koa';
 import { Willburg } from './willburg';
 import { DIContainer } from 'stick.di';
 import { SessionObject } from './middlewares/session';
+import * as formidable from 'formidable';
+export interface Configurable<T> {
+}
+export interface MultipartResult {
+    files: formidable.Files;
+    fields: formidable.Fields;
+}
+export declare type File = formidable.File;
+export declare type Files = {
+    [key: string]: File;
+};
+export interface TypedMultipartResult<T> {
+    files: Files;
+    fields: T;
+}
 export interface Context extends Koa.Context {
     app: Willburg;
     params: {
@@ -10,7 +25,9 @@ export interface Context extends Koa.Context {
     };
     isXHR: boolean;
     readBody<T>(accepts?: string[]): Promise<T>;
+    readForm<T>(o?: any): Promise<TypedMultipartResult<T>>;
     session?: SessionObject | (() => Promise<SessionObject>);
+    links(links: any): any;
 }
 export interface MiddlewareFunc {
     (ctx: Context, next?: Function): any;
@@ -21,6 +38,13 @@ export interface IApp {
     register(a: any): any;
     container: DIContainer;
     use(MiddlewareFunc: any): any;
+}
+export interface IRouteOptions {
+    end?: boolean;
+    name?: string;
+    sensitive?: boolean;
+    strict?: boolean;
+    prefix?: string;
 }
 export interface IRouter {
     routes(): MiddlewareFunc;
@@ -33,6 +57,7 @@ export interface IRouter {
     head(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;
     use(path: string | RegExp | MiddlewareFunc, ...middlewares: MiddlewareFunc[]): IRouter;
     prefix(prefix: any): any;
+    register(path: string | string[], method: string[], middlewares: MiddlewareFunc[], options?: IRouteOptions): any;
 }
 export interface ITask {
     name?: string;

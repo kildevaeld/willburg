@@ -1,7 +1,7 @@
 import './factories/index';
 
 import * as Koa from 'koa';
-import {IRouter, IApp, ITask, MiddlewareFunc} from './interfaces';
+import {IRouter, IApp, ITask, MiddlewareFunc, Configurable} from './interfaces';
 import * as iface from './interfaces';
 
 import {flatten} from './utils';
@@ -106,9 +106,9 @@ export class Willburg extends Koa implements IApp {
                 let route = routes[i];
                 let middlewares = route.middleware.concat($route(route.action, name));
                 if (!route.path) {
-                    this.router[route.method](...middlewares);
+                    //this.router[route.method](...middlewares);
                 } else {
-                    this.router[route.method](route.path, ...middlewares);
+                    //this.router[route.method](route.path, ...middlewares);
                 }
                 
             }
@@ -150,8 +150,14 @@ export class Willburg extends Koa implements IApp {
             let route = routes[i];
             let middlewares = (namespace ? namespace.middleware : [])
             .concat(route.middleware.concat($route(route.action, cName)));
+            
+            if (route.path == null) {
+                router.use(null, ...middlewares)
+            } else {
+                router.register(route.path, route.method, middlewares);
+            }
 
-            router[route.method](route.path, ...middlewares);
+            //router[route.method](route.path, ...middlewares);
         }
 
 
@@ -193,15 +199,28 @@ export class Willburg extends Koa implements IApp {
     }
 
     listen(port: number): Server {
-        for (const key in this._routers) {
+        /*for (const key in this._routers) {
             if (key == '/') continue;
             
             this.use(this._routers[key].routes());
+        }*/
+        let keys = Object.keys(this._routers);
+        keys.sort( (a, b) => b.length - a.length)
+        for (let i = 0, ii = keys.length; i < ii; i++ ) {
+            debug('mounting router %s', keys[i]);
+            this.use(this._routers[keys[i]].routes());
         }
         
-        this.use(this._routers['/'].routes());
+        //this.use(this._routers['/'].routes());
         //this.use(this.router.routes());
         return super.listen(port);
+    }
+
+    configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
+        let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
+        if (!has) return null;
+        let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
+        return this.container.get(options);
     }
 
 

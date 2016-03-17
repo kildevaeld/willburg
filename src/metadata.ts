@@ -15,7 +15,8 @@ export const MetaKeys = {
     Controller: Symbol('controller'),
     Namespace: Symbol('namespace'),
     Service: Symbol('service'),
-    Task: Symbol("task")
+    Task: Symbol("task"),
+    Options: Symbol("options")
 } 
 
 export const Factories = {
@@ -29,8 +30,8 @@ export const Variables = {
 }
 
 export interface RouteDefinition {
-    path: string;
-    method: string;
+    path: string[];
+    method: string[];
     action: string;
     middleware: MiddlewareFunc[];
 }

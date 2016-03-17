@@ -5,3 +5,8 @@ export * from './interfaces';
 export * from './willburg';
 export const decorators = d;
 export const middleware = m;
+
+
+import * as J from 'joi';
+
+export const Joi = J;

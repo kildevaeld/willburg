@@ -16,15 +16,23 @@ export async function requireDir(path: string, iterator: (mod: any, path?: strin
         let fp = Path.join(path, files[i])
 
         let stat = await fs.stat(fp);
-        
+
         if (stat.isDirectory()) {
             await requireDir(fp, iterator);
             continue;
         }
+        let mod;
+        try {
+            mod = require(fp);
 
-        let mod = require(fp);
-        
+        } catch (e) {
+            console.log(e)
+            e.path = fp;
+            throw e
+
+        }
         await iterator(mod, fp);
+
 
     }
 
@@ -33,7 +41,7 @@ export async function requireDir(path: string, iterator: (mod: any, path?: strin
 export async function processDirectory(path:string, iterator: (fn:Function, key:string, path: string) => any): Promise<number> {
     let found = 0;
     await requireDir(path, async (mod, path) => {
-        
+
         if (typeof mod === 'function') {
             await iterator(mod, null, path);
             found++;
@@ -46,16 +54,16 @@ export async function processDirectory(path:string, iterator: (fn:Function, key:
             }
         }
     });
-    
+
     return found;
-    
-} 
+
+}
 
 
 /*export async function processDirectory(app:Willburg, path:string): Promise<number> {
     let found = 0;
     await requireDir(path, async (mod, path) => {
-        
+
         if (typeof mod === 'function') {
             if (isService(mod)) {
                 app.register(mod);
@@ -70,9 +78,9 @@ export async function processDirectory(path:string, iterator: (fn:Function, key:
             }
         }
     });
-    
+
     return found;
-    
+
 } */
 
 export function flatten(arr) {

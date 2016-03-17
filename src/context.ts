@@ -1,6 +1,8 @@
 
 import * as Koa from 'koa';
 import * as i from './interfaces';
+import * as formidable from 'formidable'
+
 const _context = require('koa/lib/context');
 const parse = require('co-body');
 
@@ -34,6 +36,15 @@ Object.defineProperties(_context, {
         }
     },
     
+    "readForm": {
+        value: function (options?): Promise<i.MultipartResult> {
+            if (!this.is('multipart/form-data')) {
+                throw new Error('not multiform');
+            }
+            return 
+        }  
+    },
+    
     links: {
         value: function (links) {
             var link = this.response.get('Link') || '';
@@ -44,3 +55,17 @@ Object.defineProperties(_context, {
         }
     }
 });
+
+
+function parseFormData (ctx: i.Context): Promise<i.MultipartResult> {
+    return new Promise((resolve,reject) => {
+
+           let form = new formidable.IncomingForm();
+           form.keepExtensions = true;
+           form.parse(ctx.req, (err, fields: formidable.Fields, files: formidable.Files) => {
+                if (err) return reject(err);
+                resolve({fields,files});
+           });
+
+        });
+}

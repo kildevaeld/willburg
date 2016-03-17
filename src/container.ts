@@ -1,9 +1,11 @@
 
 import {DIContainer} from 'stick.di';
 
-let container = new DIContainer();
-container.registerInstance('container', container);
-container.makeGlobal();
+class WillburgContainer extends DIContainer {
+    
+    
+}
 
-export const Container = container;
+export const Container: DIContainer = new WillburgContainer();
+Container.makeGlobal();
 

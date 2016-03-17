@@ -10,6 +10,8 @@ export declare function put(route: string, ...middleware: MiddlewareFunc[]): Met
 export declare function del(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function patch(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function use(path: string | MiddlewareFunc, ...middleware: MiddlewareFunc[]): MethodDecorator;
+export declare function route(path: string | string[], methods: string | string[], ...middlewares: MiddlewareFunc[]): MethodDecorator;
+export declare function options(options: any): ClassDecorator;
 export declare function controller(name?: string): ClassDecorator;
 export declare function service(name?: any): ClassDecorator;
 export declare function task(name?: string): ClassDecorator;

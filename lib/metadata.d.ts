@@ -13,6 +13,7 @@ export declare const MetaKeys: {
     Namespace: symbol;
     Service: symbol;
     Task: symbol;
+    Options: symbol;
 };
 export declare const Factories: {
     Route: symbol;
@@ -23,8 +24,8 @@ export declare const Variables: {
     ViewEngine: symbol;
 };
 export interface RouteDefinition {
-    path: string;
-    method: string;
+    path: string[];
+    method: string[];
     action: string;
     middleware: MiddlewareFunc[];
 }

@@ -1,6 +1,6 @@
 import './factories/index';
 import * as Koa from 'koa';
-import { IRouter, IApp, MiddlewareFunc } from './interfaces';
+import { IRouter, IApp, MiddlewareFunc, Configurable } from './interfaces';
 import { DIContainer } from 'stick.di';
 import { Server } from 'http';
 import { Bootstrap } from './bootstrap';
@@ -41,6 +41,9 @@ export declare class Willburg extends Koa implements IApp {
     start(): Promise<Willburg>;
     startAndListen(port: number): Promise<Willburg>;
     listen(port: number): Server;
+    configure<T extends Configurable<U>, U>(service: {
+        new (o?): T;
+    }): U;
     private _normalizeOptions(options);
     private _initTasks();
 }
