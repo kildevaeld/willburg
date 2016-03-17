@@ -16,6 +16,8 @@ import {Bootstrap} from './bootstrap';
 import * as Debug from 'debug';
 import {Context} from './context'
 
+import {ValidatorMap, validate} from './validation';
+
 const debug = Debug('willburg');
 const Router = require('koa-router');
 const Mount = require('koa-mount');
@@ -123,19 +125,28 @@ export class Willburg extends Koa implements IApp {
         let namespace = metadata.getService<metadata.NamespaceDefinition>(controller, ServiceTypes.Namespace);
 
         let router = this.router;
+        let ns = namespace.path;
         if (namespace != null) {
-            router = this._routers[namespace.path];
-            if (!router) {
+            /*router = this._routers[ns];
+            if (router) {
                 router = new Router();
                 router.prefix(namespace.path);    
+                //(<any>router).use(...(<any>namespace.middleware));
+            }*/
+            router = new Router();
+            router.prefix(namespace.path);    
+            if (this._routers[ns]) {
+                ns += 1 + "";
                 //(<any>router).use(...(<any>namespace.middleware));
             }
 
             
-            this._routers[namespace.path] = router;
+            this._routers[ns] = router;
             
         }
-
+        let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
+        validations = validations||{};
+        
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
         if (!routes) return;
@@ -151,13 +162,20 @@ export class Willburg extends Koa implements IApp {
             let middlewares = (namespace ? namespace.middleware : [])
             .concat(route.middleware.concat($route(route.action, cName)));
             
+            if (validations[route.action]) {
+                let m = null;
+                for (let i = 0, ii = validations[route.action].length; i < ii; i++ ) {
+                    let def = validations[route.action][i];
+                    m = validate(def.validator, def.parameter, (m == null ? middlewares : [m]), def.shouldThrow)
+                }
+                middlewares = [m];
+            }
+            
             if (route.path == null) {
                 router.use(null, ...middlewares)
             } else {
                 router.register(route.path, route.method, middlewares);
             }
-
-            //router[route.method](route.path, ...middlewares);
         }
 
 
@@ -208,6 +226,7 @@ export class Willburg extends Koa implements IApp {
         keys.sort( (a, b) => b.length - a.length)
         for (let i = 0, ii = keys.length; i < ii; i++ ) {
             debug('mounting router %s', keys[i]);
+            
             this.use(this._routers[keys[i]].routes());
         }
         

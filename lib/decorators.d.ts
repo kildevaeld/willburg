@@ -15,6 +15,6 @@ export declare function options(options: any): ClassDecorator;
 export declare function controller(name?: string): ClassDecorator;
 export declare function service(name?: any): ClassDecorator;
 export declare function task(name?: string): ClassDecorator;
-export declare function query(schema: joi.SchemaMap, options?: any): MethodDecorator;
-export declare function body(schema: joi.SchemaMap): MethodDecorator;
+export declare function query(schema: joi.SchemaMap, options?: any, shouldThrow?: boolean): MethodDecorator;
+export declare function body(schema: joi.SchemaMap, shouldThrow?: boolean): MethodDecorator;
 export declare function params(schema: joi.SchemaMap, shouldThrow?: boolean): MethodDecorator;

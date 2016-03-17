@@ -14,6 +14,7 @@ export declare const MetaKeys: {
     Service: symbol;
     Task: symbol;
     Options: symbol;
+    Validation: symbol;
 };
 export declare const Factories: {
     Route: symbol;

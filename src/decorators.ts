@@ -1,7 +1,7 @@
 
 import 'reflect-metadata';
 import {MiddlewareFunc, Context, ITask} from './interfaces';
-
+import {Parameter, ValidatorDefinition, ValidatorMap, JoiValidator} from './validation';
 import {MetaKeys, setService, ServiceTypes, getService, RouteDefinition} from './metadata';
 
 import * as joi from 'joi';
@@ -103,77 +103,37 @@ export function task(name?:string): ClassDecorator {
     }
 }
 
-export function query(schema:joi.SchemaMap, options?:any): MethodDecorator {
+export function query(schema:joi.SchemaMap, options?:any, shouldThrow: boolean = false): MethodDecorator {
     
     let joiSchema = joi.object().keys(schema);
-    
-    return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
-        let method = descriptor.value;
-        descriptor.value =  async function (ctx: Context, next?: Function) {
-            try {
-                let query = await validate(joiSchema, ctx.query, options);
-                ctx.query = query;
-            } catch (e) {
-                ctx.throw(400, e.toString());
-            }
-            
-            return await method.call(this, ctx, next);
-        };
-    }
+    return addValidator(joiSchema, shouldThrow, Parameter.Query);
 }
 
-export function body(schema:joi.SchemaMap): MethodDecorator {
+export function body(schema:joi.SchemaMap, shouldThrow: boolean = false): MethodDecorator {
     let joiSchema = joi.object().keys(schema);
-    
+    return addValidator(joiSchema, shouldThrow, Parameter.Body);    
+}
+
+function addValidator(schema:joi.Schema, shouldThrow: boolean, params: Parameter): MethodDecorator {
     return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
-        let method = descriptor.value;
-        descriptor.value =  async function (ctx: Context, next?: Function) {
-            
-            let body = await ctx.readBody();
-            
-            try {
-                let query = await validate(joiSchema, ctx.query);
-                ctx.query = query;
-            } catch (e) {
-                ctx.throw(400, e.toString());
-            }
-            
-            return await method.call(this, ctx, next);
-        };
+        let validations: ValidatorMap = Reflect.getOwnMetadata(MetaKeys.Validation, target.constructor);
+        
+        if (!validations) validations = {};
+        
+        if (!validations[key]) validations[key] = [];
+        
+        validations[key].push({
+            validator: new JoiValidator(schema),
+            shouldThrow: shouldThrow,
+            parameter: params,
+            action: key
+        });
+        
+        Reflect.defineMetadata(MetaKeys.Validation, validations, target.constructor);
     }
 }
 
 export function params(schema:joi.SchemaMap, shouldThrow:boolean = false): MethodDecorator {
     let joiSchema = joi.object().keys(schema);
-    
-    return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
-        let method = descriptor.value;
-        descriptor.value =  async function (ctx: Context, next?: Function) {
-            
-            let params = ctx.params;
-            
-            try {
-                let query = await validate(joiSchema, params);
-                ctx.query = query;
-            } catch (e) {
-                if (shouldThrow) {
-                    ctx.throw(400, e.toString());    
-                }
-                console.error('e', e.toString(), params);
-                return next();
-            }
-            
-            return await method.call(this, ctx, next);
-        };
-    }
-}
-
-
-function validate (schema: joi.Schema, value: any, options:any = {allowUnknown:true}): Promise<any> {
-    return new Promise((resolve, reject) => {
-       joi.validate(value, schema, options ,(err, value) => {
-          if (err) return reject(err);
-          resolve(value); 
-       });
-    });
+    return addValidator(joiSchema, shouldThrow, Parameter.Params);
 }

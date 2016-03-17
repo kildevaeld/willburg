@@ -16,7 +16,8 @@ export const MetaKeys = {
     Namespace: Symbol('namespace'),
     Service: Symbol('service'),
     Task: Symbol("task"),
-    Options: Symbol("options")
+    Options: Symbol("options"),
+    Validation: Symbol("validations")
 } 
 
 export const Factories = {
@@ -28,6 +29,8 @@ export const Variables = {
     ViewRoot: Symbol('view::root'),
     ViewEngine: Symbol('view::engine')
 }
+
+
 
 export interface RouteDefinition {
     path: string[];
