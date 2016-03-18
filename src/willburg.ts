@@ -126,8 +126,9 @@ export class Willburg extends Koa implements IApp {
         let namespace = metadata.getService<metadata.NamespaceDefinition>(controller, ServiceTypes.Namespace);
 
         let router = this.router;
-        let ns = namespace.path;
+
         if (namespace != null) {
+            let ns = namespace.path;
             /*router = this._routers[ns];
             if (router) {
                 router = new Router();
@@ -148,6 +149,7 @@ export class Willburg extends Koa implements IApp {
         let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
         validations = validations||{};
 
+
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
         if (!routes) return;
@@ -160,6 +162,7 @@ export class Willburg extends Koa implements IApp {
 
         for (let i = 0, ii = routes.length; i < ii; i++) {
             let route = routes[i];
+
             let middlewares = (namespace ? namespace.middleware : [])
             .concat(route.middleware.concat($route(route.action, cName)));
 
@@ -171,6 +174,7 @@ export class Willburg extends Koa implements IApp {
                 }
                 middlewares = [m];
             }
+
 
             if (route.path == null) {
                 router.use(null, ...middlewares)
