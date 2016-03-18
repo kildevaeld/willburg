@@ -14,30 +14,32 @@ const debug = Debug('willburg:tasks:directory');
 export class Directory implements ITask {
     name = "Services";
     paths: string[];
-    constructor(...paths: string[]) { 
+    constructor(...paths: string[]) {
         this.paths = paths;
     }
-    
+
     async run(app: Willburg): Promise<void> {
-        
+
         for (let i = 0, ii = this.paths.length; i < ii; i++ ) {
+            debug('loading directory: %s', this.paths[i]);
             try {
                let found = await processDirectory(this.paths[i], async (mod, path) => {
-                   if (isService(mod)) {      
-                        app.register(mod);        
+                   if (isService(mod)) {
+                        app.register(mod);
                    }
-               }); 
-            
+               });
+
             } catch (e) {
+
                 if (e.code == 'ENOENT') {
                     debug('path %s doest not exists: %s', this.paths[i], e);
                     continue;
                 }
-                debug("Error %s in %s", e, e.path)
+                debug("Error %s in %s", e, e.path, this.paths[i])
                 throw e;
             }
         }
-        
-        return 
+
+        return
     }
 }

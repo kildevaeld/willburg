@@ -9,6 +9,7 @@ export interface WillburgPaths {
     routes?: string;
     controllers?: string;
     services?: string;
+    directories?: string[];
 }
 export interface WillburgOptions {
     paths?: WillburgPaths;

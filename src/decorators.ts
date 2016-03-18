@@ -13,19 +13,19 @@ export {inject, autoinject} from 'stick.di';
 function defineRoute(method: string[], route: string[], middlewares: MiddlewareFunc[]): MethodDecorator {
     return function (target:any, key: string, desc:PropertyDescriptor) {
         middlewares = middlewares||[];
-        
+
         let ctor = target.constructor;
         let routes = getService<RouteDefinition[]>(ctor, ServiceTypes.Route);
-        
+
         if (!routes) routes = [];
-        
+
         routes.push({
             method: method,
             path: route,
             action: key,
             middleware: middlewares
         })
-        
+
         setService(ctor, ServiceTypes.Route, routes);
     };
 }
@@ -73,10 +73,11 @@ export function route(path:string|string[], methods:string|string[], ...middlewa
     m = m.map( e => e.toUpperCase());
     path = Array.isArray(path) ? path : [path];
     methods = Array.isArray(methods) ? methods : [methods];
-    
+
     return defineRoute(<string[]>methods, <string[]>path, middlewares);
-    
+
 }
+
 
 export function options(options:any): ClassDecorator {
     return function (target: Function) {
@@ -103,34 +104,38 @@ export function task(name?:string): ClassDecorator {
     }
 }
 
-export function query(schema:joi.SchemaMap, options?:any, shouldThrow: boolean = false): MethodDecorator {
-    
-    let joiSchema = joi.object().keys(schema);
-    return addValidator(joiSchema, shouldThrow, Parameter.Query);
-}
-
-export function body(schema:joi.SchemaMap, shouldThrow: boolean = false): MethodDecorator {
-    let joiSchema = joi.object().keys(schema);
-    return addValidator(joiSchema, shouldThrow, Parameter.Body);    
-}
+/*************************
+ *****   Validator   *****
+ *************************/
 
 function addValidator(schema:joi.Schema, shouldThrow: boolean, params: Parameter): MethodDecorator {
     return function (target: any, key: string, descriptor: TypedPropertyDescriptor<Function>) {
+
         let validations: ValidatorMap = Reflect.getOwnMetadata(MetaKeys.Validation, target.constructor);
-        
+
         if (!validations) validations = {};
-        
+
         if (!validations[key]) validations[key] = [];
-        
+
         validations[key].push({
             validator: new JoiValidator(schema),
             shouldThrow: shouldThrow,
             parameter: params,
             action: key
         });
-        
+
         Reflect.defineMetadata(MetaKeys.Validation, validations, target.constructor);
     }
+}
+
+export function query(schema: joi.SchemaMap, options?: any, shouldThrow: boolean = false): MethodDecorator {
+  let joiSchema = joi.object().keys(schema);
+  return addValidator(joiSchema, shouldThrow, Parameter.Query);
+}
+
+export function body(schema: joi.SchemaMap, shouldThrow: boolean = false): MethodDecorator {
+  let joiSchema = joi.object().keys(schema);
+  return addValidator(joiSchema, shouldThrow, Parameter.Body);
 }
 
 export function params(schema:joi.SchemaMap, shouldThrow:boolean = false): MethodDecorator {

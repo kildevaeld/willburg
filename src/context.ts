@@ -6,24 +6,17 @@ import * as formidable from 'formidable'
 const _context = require('koa/lib/context');
 const parse = require('co-body');
 
-export const Context: i.Context = _context; 
+export const Context: i.Context = _context;
 
-/*
-Object.assign(_context, {
-    get isXHR (): boolean {
-        console.log(_context)
-        let xhr = this.req.get('X-Requested-With');
-        return xhr === 'XMLHttpRequest';
-    }
-});*/
+
 Object.defineProperties(_context, {
     "isXHR": {
         get: function () {
            let xhr = this.req.get('X-Requested-With');
-            return xhr === 'XMLHttpRequest'; 
+            return xhr === 'XMLHttpRequest';
         }
     },
-    
+
     "readBody": {
         value: function (accepts:string[] = ['json', 'urlencoded']): Promise<any> {
             switch (this.is(accepts)) {
@@ -35,16 +28,16 @@ Object.defineProperties(_context, {
             return null;
         }
     },
-    
+
     "readForm": {
         value: function (options?): Promise<i.MultipartResult> {
             if (!this.is('multipart/form-data')) {
                 throw new Error('not multiform');
             }
-            return 
-        }  
+            return
+        }
     },
-    
+
     links: {
         value: function (links) {
             var link = this.response.get('Link') || '';

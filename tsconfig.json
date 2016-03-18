@@ -8,7 +8,9 @@
     "declaration": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "typings/main.d.ts",
+    "typings/main"
   ],
   "files": [
     "src/bootstrap.ts",
@@ -23,12 +25,6 @@
     "src/factories/index.ts",
     "src/factories/route-factory.ts",
     "src/factories/view-factory.ts",
-    "src/middlewares/errors.ts",
-    "src/middlewares/index.ts",
-    "src/middlewares/multiform.ts",
-    "src/middlewares/session.ts",
-    "src/middlewares/static.ts",
-    "src/middlewares/views.ts",
     "src/tasks/index.ts",
     "src/tasks/initializers.ts",
     "src/tasks/middlewares.ts",
@@ -36,6 +32,11 @@
     "src/tasks/runner.ts",
     "src/tasks/services.ts",
     "src/tasks/views.ts",
+    "src/middlewares/errors.ts",
+    "src/middlewares/index.ts",
+    "src/middlewares/session.ts",
+    "src/middlewares/static.ts",
+    "src/middlewares/views.ts",
     "src/validation/index.ts",
     "src/validation/joi.ts"
   ]

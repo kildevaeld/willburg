@@ -17,4 +17,12 @@ export interface ValidatorDefinition {
     shouldThrow: boolean;
     action: string;
 }
+/**
+ * Validate wraps a array of middleware, which only a executed, if the request is valid
+ * @param  {IValidator}       validator The validator to run
+ * @param  {Parameter}        param     Which parameter to validate (url-query, url-parameter or body)
+ * @param  {MiddlewareFunc[]} success   Middleware functions to run, if the validator
+ * @param  {boolean}          shouldThrow Should throw on invalid, normal behaviour is to skip the middleware stack, and call next
+ * @return {MiddlewareFunc}
+ */
 export declare function validate(validator: IValidator, param: Parameter, success: MiddlewareFunc[], shouldThrow?: boolean): MiddlewareFunc;

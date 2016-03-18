@@ -28,6 +28,7 @@ export interface WillburgPaths {
     routes?: string;
     controllers?: string;
     services?: string;
+    directories?: string[];
 }
 
 export interface WillburgOptions {
@@ -44,11 +45,11 @@ export class Willburg extends Koa implements IApp {
     //private _tasks: ITask[]
     private _container: DIContainer;
     private _boot: Bootstrap;
-    
+
     get boot (): Bootstrap {
         return this._boot;
     }
-    
+
     get router(): IRouter {
         return this._routers['/'];
     }
@@ -75,9 +76,9 @@ export class Willburg extends Koa implements IApp {
         this._container.registerInstance(Willburg, this);
         this._routers = {'/': new Router()};
         this._boot = new Bootstrap(this);
-        
+
         this._initTasks();
-        
+
     }
 
     use (fn: MiddlewareFunc) {
@@ -86,7 +87,7 @@ export class Willburg extends Koa implements IApp {
     }
 
     register(some: any) {
-        
+
         if (metadata.isService(some, metadata.ServiceTypes.Controller)) {
             this.registerController(some);
         } else if (metadata.isService(some, ServiceTypes.Service)) {
@@ -112,7 +113,7 @@ export class Willburg extends Koa implements IApp {
                 } else {
                     //this.router[route.method](route.path, ...middlewares);
                 }
-                
+
             }
         }
 
@@ -130,27 +131,27 @@ export class Willburg extends Koa implements IApp {
             /*router = this._routers[ns];
             if (router) {
                 router = new Router();
-                router.prefix(namespace.path);    
+                router.prefix(namespace.path);
                 //(<any>router).use(...(<any>namespace.middleware));
             }*/
             router = new Router();
-            router.prefix(namespace.path);    
+            router.prefix(namespace.path);
             if (this._routers[ns]) {
                 ns += 1 + "";
                 //(<any>router).use(...(<any>namespace.middleware));
             }
 
-            
+
             this._routers[ns] = router;
-            
+
         }
         let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
         validations = validations||{};
-        
+
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
         if (!routes) return;
-        
+
         let cName = '$controller:' + name;
         debug('register controller: "%s" as %s', name, cName)
         this._container.registerSingleton(cName, controller);
@@ -161,7 +162,7 @@ export class Willburg extends Koa implements IApp {
             let route = routes[i];
             let middlewares = (namespace ? namespace.middleware : [])
             .concat(route.middleware.concat($route(route.action, cName)));
-            
+
             if (validations[route.action]) {
                 let m = null;
                 for (let i = 0, ii = validations[route.action].length; i < ii; i++ ) {
@@ -170,26 +171,15 @@ export class Willburg extends Koa implements IApp {
                 }
                 middlewares = [m];
             }
-            
+
             if (route.path == null) {
                 router.use(null, ...middlewares)
             } else {
                 router.register(route.path, route.method, middlewares);
             }
         }
-
-
-        if (router !== this._router) {
-           
-            //let middlewares = [router.routes(), router.allowedMethods()];
-            //(<any>this.router).use(...namespace.middleware.concat(middlewares));
-            //console.log(router.stack)
-            //this.router.use(router.routes())
-            //this.router.use(namespace.path, router.routes(),router.allowedMethods());
-        }
-
     }
-    
+
     mount(path: string, middleware: MiddlewareFunc | Willburg | Koa) {
         this.use(Mount(path, middleware));
     }
@@ -206,7 +196,7 @@ export class Willburg extends Koa implements IApp {
         await this.boot.run();
         this._boot = void 0;
         debug('willburg started');
-        
+
         return this;
     }
 
@@ -217,22 +207,16 @@ export class Willburg extends Koa implements IApp {
     }
 
     listen(port: number): Server {
-        /*for (const key in this._routers) {
-            if (key == '/') continue;
-            
-            this.use(this._routers[key].routes());
-        }*/
+        // Mount router sorted by route-path length
         let keys = Object.keys(this._routers);
         keys.sort( (a, b) => b.length - a.length)
         for (let i = 0, ii = keys.length; i < ii; i++ ) {
             debug('mounting router %s', keys[i]);
-            
             this.use(this._routers[keys[i]].routes());
         }
-        
-        //this.use(this._routers['/'].routes());
-        //this.use(this.router.routes());
+
         return super.listen(port);
+
     }
 
     configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
@@ -244,35 +228,26 @@ export class Willburg extends Koa implements IApp {
 
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
-        options = options||{paths:{}, middlewares:{}};   
+        options = options||{paths:{}, middlewares:{}};
         options = Object.assign({paths:{}, middlewares:{}}, options);
         return options;
     }
-    
+
     private _initTasks() {
         this._boot.push(new tasks.Middlewares())
-        
-        let dirs = ['services', 'controllers', 'paths'].map<string>( (e) => {
+
+        let dirs = ['services', 'controllers', 'directories'].map<string>( (e) => {
            return this._opts.paths[e];
         }).filter( e => e != null );
-        
+
         dirs = flatten(dirs);
-        console.log('dirs', dirs)
+
         this.boot.push(new tasks.Directory(...dirs));
         this.boot.push([
-            new tasks.Initializers(),
-            new tasks.Views(),
-            new tasks.Routes()
-        ])
-        /*this._boot.push([
-            new tasks.Middlewares(),
-            new tasks.Directory()
-            //new tasks.Services(),
-            //new tasks.Initializers(),
-            //new tasks.Views(),
-            //new tasks.Controllers(),
-            //new tasks.Routes()
-        ]);*/
+          new tasks.Initializers(),
+          new tasks.Views(),
+          new tasks.Routes()
+        ]);
     }
 
 }
