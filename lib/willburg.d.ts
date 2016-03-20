@@ -16,6 +16,7 @@ export interface WillburgOptions {
     middlewares?: {
         [key: string]: any;
     };
+    directories?: string[];
 }
 export declare class Willburg extends Koa implements IApp {
     private _router;

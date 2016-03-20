@@ -9,8 +9,10 @@ require('babel-register')({
 var Willburg = require('../lib/willburg').Willburg;
 
 
-let app = new Willburg();
-
+let app = new Willburg({
+    directories: ['controllers', 'services']
+});
+app.keys = ['hello']
 app.startAndListen(3000).catch( e => {
     console.log(e.stack)
 })

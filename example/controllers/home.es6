@@ -11,7 +11,7 @@ export default class HomeController {
 
     @decorators.query({
         title: decorators.Joi.string().required()
-    })
+    }, null,true)
     @decorators.get('/')
     async index(ctx) {
         ctx.type = "text/html";

@@ -19,7 +19,7 @@ export class Directory implements ITask {
     }
 
     async run(app: Willburg): Promise<void> {
-
+        console.log(this.paths)
         for (let i = 0, ii = this.paths.length; i < ii; i++ ) {
             debug('loading directory: %s', this.paths[i]);
             try {

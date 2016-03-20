@@ -14,8 +14,8 @@
   ],
   "files": [
     "src/bootstrap.ts",
-    "src/container.ts",
     "src/context.ts",
+    "src/container.ts",
     "src/decorators.ts",
     "src/index.ts",
     "src/interfaces.ts",
@@ -25,6 +25,7 @@
     "src/factories/index.ts",
     "src/factories/route-factory.ts",
     "src/factories/view-factory.ts",
+    "src/tasks/caching.ts",
     "src/tasks/index.ts",
     "src/tasks/initializers.ts",
     "src/tasks/middlewares.ts",

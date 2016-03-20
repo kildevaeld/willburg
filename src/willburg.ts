@@ -36,6 +36,7 @@ export interface WillburgOptions {
     middlewares?: {
         [key: string]: any
     };
+    directories?: string[];
 }
 
 export class Willburg extends Koa implements IApp {
@@ -232,21 +233,22 @@ export class Willburg extends Koa implements IApp {
 
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
-        options = options||{paths:{}, middlewares:{}};
-        options = Object.assign({paths:{}, middlewares:{}}, options);
+        options = options||{paths:{}, middlewares:{}, directories:[]};
+        options = Object.assign({paths:{}, middlewares:{}, directories:[]}, options);
         return options;
     }
 
     private _initTasks() {
         this._boot.push(new tasks.Middlewares())
 
-        let dirs = ['services', 'controllers', 'directories'].map<string>( (e) => {
+        /*let dirs = ['services', 'controllers', 'directories'].map<string>( (e) => {
            return this._opts.paths[e];
         }).filter( e => e != null );
 
-        dirs = flatten(dirs);
-
-        this.boot.push(new tasks.Directory(...dirs));
+        dirs = flatten(dirs);*/
+        
+        this.boot.push(new tasks.Directory(...this._opts.directories));
+        this.boot.push(new tasks.Caching())
         this.boot.push([
           new tasks.Initializers(),
           new tasks.Views(),
