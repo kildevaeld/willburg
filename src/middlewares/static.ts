@@ -13,6 +13,7 @@ export interface StaticOptions {
     defer?: boolean;
     gzip?: boolean
     root?: string;
+    maxage?: number;
 }
 
 export function Static (root:string|string[], options:StaticOptions={}): MiddlewareFunc {
