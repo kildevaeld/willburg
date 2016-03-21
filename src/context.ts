@@ -34,7 +34,7 @@ Object.defineProperties(_context, {
             if (!this.is('multipart/form-data')) {
                 throw new Error('not multiform');
             }
-            return
+            return parseFormData(this);
         }
     },
 

@@ -1,5 +1,6 @@
 import { MiddlewareFunc, Context } from './interfaces';
-export declare class Controller {
+import { EventEmitter } from 'events';
+export declare class Controller extends EventEmitter {
     static isController: boolean;
     _stack: MiddlewareFunc[];
     use(...fns: MiddlewareFunc[]): this;
