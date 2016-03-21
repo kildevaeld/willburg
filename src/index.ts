@@ -5,7 +5,7 @@ export * from './interfaces';
 export * from './willburg';
 export const decorators = d;
 export const middleware = m;
-
+export * from './controller';
 
 import * as J from 'joi';
 

@@ -11,7 +11,7 @@ function Middleware (ctx, next) {
 export default class ApiController {
     
     @decorators.get('/')
-    async index(ctx) {
+    index(ctx) {
         ctx.type = "text/html";
         ctx.body = "Hello, World";
     }

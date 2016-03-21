@@ -1,7 +1,8 @@
 'use strict';
 require('babel-register')({
-    presets: ['es2015-without-regenerator', 'stage-0'],
-    plugins: ['transform-decorators-legacy'],
+    plugins: require('../gulp/config').babel.concat(['transform-decorators-legacy']),
+    //presets: ['es2015-without-regenerator', 'stage-0'],
+    //plugins: ['transform-decorators-legacy'],
     extensions: [".es6"]
 });
 
@@ -19,6 +20,6 @@ app.startAndListen(3000).catch( e => {
 
 app.on('error', (e) => {
     
-    console.error(e.stack)
+    console.error(e)
     process.exit(-1)
 })

@@ -5,5 +5,6 @@ export * from './interfaces';
 export * from './willburg';
 export declare const decorators: typeof d;
 export declare const middleware: typeof m;
+export * from './controller';
 import * as J from 'joi';
 export declare const Joi: typeof J;

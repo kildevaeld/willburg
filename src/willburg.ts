@@ -130,26 +130,19 @@ export class Willburg extends Koa implements IApp {
 
         if (namespace != null) {
             let ns = namespace.path;
-            /*router = this._routers[ns];
-            if (router) {
-                router = new Router();
-                router.prefix(namespace.path);
-                //(<any>router).use(...(<any>namespace.middleware));
-            }*/
+            
             router = new Router();
             router.prefix(namespace.path);
             if (this._routers[ns]) {
                 ns += 1 + "";
-                //(<any>router).use(...(<any>namespace.middleware));
             }
-
 
             this._routers[ns] = router;
 
         }
+        
         let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
         validations = validations||{};
-
 
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
