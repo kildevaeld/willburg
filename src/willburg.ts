@@ -130,7 +130,7 @@ export class Willburg extends Koa implements IApp {
 
         if (namespace != null) {
             let ns = namespace.path;
-            
+
             router = new Router();
             router.prefix(namespace.path);
             if (this._routers[ns]) {
@@ -140,7 +140,7 @@ export class Willburg extends Koa implements IApp {
             this._routers[ns] = router;
 
         }
-        
+
         let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
         validations = validations||{};
 
@@ -217,7 +217,13 @@ export class Willburg extends Koa implements IApp {
 
     }
 
-    configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
+    /*configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
+        let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
+        if (!has) return null;
+        let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
+        return this.container.get(options);
+    }*/
+    configure<U>(service:{new(...args:any[]): U}): U {
         let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
         if (!has) return null;
         let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
@@ -239,7 +245,7 @@ export class Willburg extends Koa implements IApp {
         }).filter( e => e != null );
 
         dirs = flatten(dirs);*/
-        
+
         this.boot.push(new tasks.Directory(...this._opts.directories));
         this.boot.push(new tasks.Caching())
         this.boot.push([
