@@ -217,18 +217,18 @@ export class Willburg extends Koa implements IApp {
 
     }
 
-    /*configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
-        let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
-        if (!has) return null;
-        let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
-        return this.container.get(options);
-    }*/
-    configure<U>(service:{new(...args:any[]): U}): U {
+    configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
         let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
         if (!has) return null;
         let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
         return this.container.get(options);
     }
+    /*configure<U>(service:{new(...args:any[]): U}): U {
+        let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
+        if (!has) return null;
+        let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
+        return this.container.get(options);
+    }*/
 
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
