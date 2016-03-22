@@ -3,7 +3,7 @@ Nodejs web framework based on Koa2
 
 
 
-## Controller
+## Usage
 
 ```javascript
 
@@ -45,7 +45,7 @@ export class Database {
 // app.ts
 
 const app = new Willburg({
-  directories: ['controllers']
+  directories: ['controllers', 'services']
 });
 
 app.startAndListen(3000).then(() => {
