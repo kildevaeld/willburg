@@ -19,13 +19,21 @@ Object.defineProperties(_context, {
 
     "readBody": {
         value: function (accepts:string[] = ['json', 'urlencoded']): Promise<any> {
+            if (this.__cached_body) return this.__cached_body === true ? null : this.__cached_body;
+            let out = null;
             switch (this.is(accepts)) {
             case 'json':
-                return parse.json(this.req);
+                out = parse.json(this);
+                break;
             case 'urlencoded':
-                return parse.form(this.req);
+                out = parse.form(this.req);
+                break;
             }
-            return null;
+
+            return out == null ? null : out.then( e => {
+                this.__cached_body = e == null ? true : e;
+                return e;
+            });
         }
     },
 
