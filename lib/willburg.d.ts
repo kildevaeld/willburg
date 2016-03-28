@@ -44,7 +44,7 @@ export declare class Willburg extends Koa implements IApp {
     startAndListen(port: number): Promise<Willburg>;
     listen(port: number): Server;
     configure<T extends Configurable<U>, U>(service: {
-        new (o?): T;
+        new (...o: any[]): T;
     }): U;
     private _normalizeOptions(options);
     private _initTasks();

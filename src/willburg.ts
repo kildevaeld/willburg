@@ -217,7 +217,7 @@ export class Willburg extends Koa implements IApp {
 
     }
 
-    configure<T extends Configurable<U>, U>(service:{new(o?): T}): U {
+    configure<T extends Configurable<U>, U>(service:{new(...o:any[]): T}): U {
         let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
         if (!has) return null;
         let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
