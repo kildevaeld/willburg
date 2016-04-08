@@ -22,6 +22,8 @@ export interface TypedMultipartResult<T> {
 }
 
 export interface Context extends Koa.Context {
+    matched: any[];
+    captures: string[];
     app: Willburg;
     params: { [key: string]: any };
     isXHR: boolean;
@@ -53,6 +55,7 @@ export interface IRouteOptions {
 }
 
 export interface IRouter {
+    
     routes(): MiddlewareFunc;
     allowedMethods(): MiddlewareFunc;
     get(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;

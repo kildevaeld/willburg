@@ -19,6 +19,8 @@ export interface TypedMultipartResult<T> {
     fields: T;
 }
 export interface Context extends Koa.Context {
+    matched: any[];
+    captures: string[];
     app: Willburg;
     params: {
         [key: string]: any;

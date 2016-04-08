@@ -66,10 +66,18 @@ export function validate(validator:IValidator, param: Parameter, success: Middle
         if (oldValue == null) ctx.throw(500, `${Parameter[param]} has no value`);
 
         let value = Object.assign({}, oldValue);
+        
+        if (ctx.matched) {
+            if (param === Parameter.Params && ctx.matched.length) {
+                // Get the last match
+                let match = ctx.matched[ctx.matched.length - 1];
+                value = match.params(ctx.path, ctx.captures, {});
+            }
+        } 
 
         try {
 
-            debug(`validation '%s' on '%s'`, Parameter[param], ctx.originalUrl);
+            debug(`validation '%s' on '%s': %j`, Parameter[param], ctx.originalUrl, value);
             let invalid = await validator.validate(value);
 
             if (invalid instanceof Error) {
@@ -81,7 +89,7 @@ export function validate(validator:IValidator, param: Parameter, success: Middle
            
             
         } catch (e) {
-            debug('error while validating "%s" on "%s"', Parameter[param], ctx.originalUrl);
+            debug('error while validating "%s" on "%s": %s', Parameter[param], ctx.originalUrl, e.message);
             if (shouldThrow) {
                 ctx.throw(400, e.message);
             }
