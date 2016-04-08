@@ -10,19 +10,22 @@ export default class HomeController extends Controller {
         this.render = render;
     }
 
-    /*@decorators.query({
-        title: decorators.Joi.string().required()
-    }, null,true)*/
+    @decorators.query({
+        age: decorators.Joi.number().default(200)
+    }, null,true)
     @decorators.get('/')
     index(ctx) {
         ctx.type = "text/html";
-        ctx.body = "Hello"; // await this.render('index');
+        ctx.body = "Hello age: " + ctx.query.age + " " + typeof ctx.query.age ; // await this.render('index');
+        
+        
     }
 
     @decorators.get('/throw')
     throw(ctx) {
         throw new Error('fuckit')
     }
+    
 
     @decorators.post('/json')
     json (ctx) {

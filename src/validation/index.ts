@@ -38,10 +38,12 @@ async function _getValue (ctx: Context, param: Parameter): Promise<any> {
 async function _setValue (ctx: Context, param: Parameter, value: any): Promise<any> {
     switch (param) {
         case Parameter.Params:
-            ctx.params = value;
+            Object.assign(ctx.params, value);
+            //ctx.params = value;
             return
         case Parameter.Query:
-            ctx.query = value;
+            Object.assign(ctx.query, value)
+            //ctx.query = value;
             return
         case Parameter.Body:
         default: return null;
@@ -73,7 +75,11 @@ export function validate(validator:IValidator, param: Parameter, success: Middle
             if (invalid instanceof Error) {
                 throw invalid;
             }
-
+            
+            await _setValue(ctx, param, invalid);
+            
+           
+            
         } catch (e) {
             debug('error while validating "%s" on "%s"', Parameter[param], ctx.originalUrl);
             if (shouldThrow) {
