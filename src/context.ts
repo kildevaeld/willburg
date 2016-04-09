@@ -12,7 +12,7 @@ export const Context: i.Context = _context;
 Object.defineProperties(_context, {
     "isXHR": {
         get: function () {
-           let xhr = this.req.get('X-Requested-With');
+           let xhr = this.get('X-Requested-With');
             return xhr === 'XMLHttpRequest';
         }
     },
