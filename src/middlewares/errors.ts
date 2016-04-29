@@ -15,7 +15,7 @@ export function ErrorHandler(fn?: (ctx: Context, error: Error) => any, propagate
             let statusCode = e.status || e.statusCode;
 
             let [type, data] = (() => {
-                switch ((<any>ctx).accepts('html', 'json')) {
+                switch ((<any>ctx).accepts('json', 'html')) {
                     case "json": return [
                         'application/json',
                         { status: statusCode || 500, error: e.message }
