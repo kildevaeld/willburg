@@ -39,6 +39,9 @@ function getPaths(abs, rel, ext): Promise<{rel:string, abs: string}> {
   });
 }
 
+export interface View {
+    (path: string, locals?: any, engine?: any): Promise<string>;
+}
 
 export function ViewFactory ( root: string, defaultEngine: string ) {
     
