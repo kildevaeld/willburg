@@ -1,13 +1,14 @@
 {
   "name": "willburg",
   "version": false,
-  "dependencies": {},
-  "ambientDependencies": {
-    "debug": "registry:dt/debug#0.0.0+20160317120654",
+  "globalDependencies": {
     "formidable": "registry:dt/formidable#1.0.16+20160316155526",
-    "joi": "registry:dt/joi#4.6.0+20160316155526",
-    "koa": "registry:dt/koa#2.0.0+20160317120654",
+    "joi": "registry:dt/joi#9.0.0+20160626220651",
+    "koa": "registry:dt/koa#2.0.0+20160619030120",
     "mz": "registry:dt/mz#0.0.0+20160217153523",
-    "node": "registry:dt/node#4.0.0+20160317120654"
+    "node": "registry:env/node#6.0.0+20160622202520"
+  },
+  "dependencies": {
+    "debug": "registry:npm/debug#2.0.0+20160511151334"
   }
 }

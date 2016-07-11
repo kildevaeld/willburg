@@ -19,18 +19,18 @@ export class Directory implements ITask {
     }
 
     async run(app: Willburg): Promise<void> {
-        
-        for (let i = 0, ii = this.paths.length; i < ii; i++ ) {
+
+        for (let i = 0, ii = this.paths.length; i < ii; i++) {
             debug('loading directory: %s', this.paths[i]);
             try {
-               let found = await processDirectory(this.paths[i], async (mod, path) => {
-                   if (isService(mod)) {
+                let found = await processDirectory(this.paths[i], async (mod, name, path) => {
+                    if (isService(mod)) {
                         app.register(mod);
-                   }
-               });
+                    } 
+                });
+
 
             } catch (e) {
-
                 if (e.code == 'ENOENT') {
                     debug('path %s doest not exists: %s', this.paths[i], e);
                     continue;

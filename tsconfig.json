@@ -13,6 +13,7 @@
     "typings/main"
   ],
   "files": [
+    "typings/index.d.ts",
     "src/bootstrap.ts",
     "src/container.ts",
     "src/context.ts",

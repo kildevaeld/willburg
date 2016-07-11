@@ -118,8 +118,12 @@ export class Willburg extends Koa implements IApp {
             }
         }
 
-        debug('register service: "%s"', service.name)
-        this._container.registerSingleton(name, service);
+        if (this._container.hasHandler(name)) {
+            debug('service "%s" already defined', service.name||name);
+        } else {
+            debug('register service: "%s"', service.name||name)
+            this._container.registerSingleton(name, service);    
+        }
     }
 
     registerController(controller: Function) {

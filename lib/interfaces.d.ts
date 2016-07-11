@@ -1,4 +1,3 @@
-/// <reference path="../typings/main.d.ts" />
 import * as Koa from 'koa';
 import { Willburg } from './willburg';
 import { DIContainer } from 'stick.di';

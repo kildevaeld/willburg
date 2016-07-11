@@ -12,17 +12,20 @@ export class Controller extends EventEmitter {
         return this;
     }
     
-    handleRequest (action: string, ctx: Context, next: Function) {
+    async handleRequest (action: string, ctx: Context, next: Function) {
         this.emit('before:action', action);
+
         if (this._stack.length > 0) {
-            return compose(this._stack)(ctx, next).then( () => {
-                return this[action].call(this, ctx, next); 
-            });
+            let i = this._stack.length;
+            while (i--) {
+                await this._stack[i].call(this, ctx, next);
+            }
+           
         }
         
         let ret = this[action](ctx, next);
         this.emit('action', action);
-        
         return ret;
+
     }
 }

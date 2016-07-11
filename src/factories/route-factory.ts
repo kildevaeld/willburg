@@ -10,6 +10,10 @@ import * as Debug from 'debug';
 
 const debug = Debug('willburg:factories:route')
 
+export interface IRouteFactory {
+    (action: string, controllerName: string): MiddlewareFunc;
+}
+
 export function RouteFactory ( $container: DIContainer) {
     return function (action: string, controllerName:string): MiddlewareFunc {
         var controller;
