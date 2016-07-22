@@ -1,5 +1,6 @@
-import { ITask, IApp } from '../interfaces';
+import { ITask } from '../interfaces';
+import { Willburg } from '../willburg';
 export declare class Middlewares implements ITask {
     name: string;
-    run(app: IApp): Promise<void>;
+    run(app: Willburg): Promise<void>;
 }

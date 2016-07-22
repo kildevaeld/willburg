@@ -37,6 +37,7 @@ export interface WillburgOptions {
         [key: string]: any
     };
     directories?: string[];
+    session?: boolean;
 }
 
 export class Willburg extends Koa implements IApp {
@@ -61,6 +62,10 @@ export class Willburg extends Koa implements IApp {
 
     get container(): DIContainer {
         return this._container;
+    }
+
+    get options(): WillburgOptions {
+        return this._opts;
     }
 
     constructor(options?: WillburgOptions) {
@@ -236,8 +241,8 @@ export class Willburg extends Koa implements IApp {
 
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
-        options = options||{paths:{}, middlewares:{}, directories:[]};
-        options = Object.assign({paths:{}, middlewares:{}, directories:[]}, options);
+        options = options||{paths:{}, middlewares:{}, directories:[], session: true};
+        options = Object.assign({paths:{}, middlewares:{}, directories:[], session:true}, options);
         return options;
     }
 

@@ -17,6 +17,7 @@ export interface WillburgOptions {
         [key: string]: any;
     };
     directories?: string[];
+    session?: boolean;
 }
 export declare class Willburg extends Koa implements IApp {
     private _router;
@@ -28,6 +29,7 @@ export declare class Willburg extends Koa implements IApp {
     router: IRouter;
     settings: WillburgOptions;
     container: DIContainer;
+    options: WillburgOptions;
     constructor(options?: WillburgOptions);
     use(fn: MiddlewareFunc): this;
     register(some: any): void;
