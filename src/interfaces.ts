@@ -5,7 +5,12 @@ import {DIContainer} from 'stick.di';
 import {SessionObject} from './middlewares/session';
 import * as formidable from 'formidable';
 
-export interface Configurable<T> { }
+/*export interface Configurable<T, O> { 
+    new(options:O): T
+}*/
+
+export interface Configurable<T> { 
+}
 
 export interface MultipartResult {
     files: formidable.Files;

@@ -21,8 +21,9 @@ export function ErrorHandler(fn?: (ctx: Context, error: Error) => any, propagate
                         { status: statusCode || 500, error: e.message }
                     ];
                     case "html":
-                    default:
                         return ['text/html', e.message];
+                    default:
+                        return ["text/plain", e.message];
                 }
             })();
             if (statusCode == null) {

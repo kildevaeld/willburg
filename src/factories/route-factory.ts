@@ -1,6 +1,6 @@
 
 import {DIContainer, factory} from 'stick.di'
-import {MiddlewareFunc} from '../interfaces';
+import {MiddlewareFunc, Context} from '../interfaces';
 import {Factories} from '../metadata'
 import * as Koa from 'koa';
 import {Container} from '../container';
@@ -17,7 +17,7 @@ export interface IRouteFactory {
 export function RouteFactory ( $container: DIContainer) {
     return function (action: string, controllerName:string): MiddlewareFunc {
         var controller;
-        return async function(ctx: Koa.Context, next?: Function): Promise<any> {
+        return async function(ctx: Context, next?: Function): Promise<any> {
             debug('calling %s on %s', action, controllerName);
             if (!controller)
                 controller = $container.get(controllerName);

@@ -8,7 +8,7 @@ import * as joi from 'joi';
 
 export const Joi = joi;
 
-export {inject, autoinject} from 'stick.di';
+export {inject} from 'stick.di';
 
 function defineRoute(method: string[], route: string[], middlewares: MiddlewareFunc[]): MethodDecorator {
     return function (target:any, key: string, desc:PropertyDescriptor) {

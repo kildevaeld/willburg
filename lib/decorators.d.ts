@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { MiddlewareFunc } from './interfaces';
 import * as joi from 'joi';
 export declare const Joi: typeof joi;
-export { inject, autoinject } from 'stick.di';
+export { inject } from 'stick.di';
 export declare function namespace(path: string, ...middleware: MiddlewareFunc[]): ClassDecorator;
 export declare function get(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;
 export declare function post(route: string, ...middleware: MiddlewareFunc[]): MethodDecorator;

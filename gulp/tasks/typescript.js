@@ -14,10 +14,10 @@ gulp.task('typescript', () => {
   .pipe(tsc(project))
 
   let js = result.js
-  .pipe(babel({
+  /*.pipe(babel({
     //presets: ['es2015-without-regenerator'],
     plugins: config.babel
-  }))
+  }))*/
 
   return merge([
     js.pipe(gulp.dest('lib')),

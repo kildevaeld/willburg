@@ -207,13 +207,14 @@ export class Willburg extends Koa implements IApp {
         return this;
     }
 
-    async startAndListen(port: number): Promise<Willburg> {
-        await this.start();
-        this.listen(port);
-        return this;
+    startAndListen(port: number): Promise<Server> {
+        return this.start()
+        .then(() => {
+            return this.listen(port);
+        });
     }
 
-    listen(port: number): Server {
+    listen(port: number|string, hostname?: string|number|Function, backlog?: number|Function, listeningListener?: Function): Server {
         // Mount router sorted by route-path length
         let keys = Object.keys(this._routers);
         keys.sort( (a, b) => b.length - a.length)
@@ -222,23 +223,17 @@ export class Willburg extends Koa implements IApp {
             this.use(this._routers[keys[i]].routes());
         }
 
-        return super.listen(port);
+        return super.listen(<any>port, <any>hostname, <any>backlog, listeningListener);
 
     }
 
-    configure<T extends Configurable<U>, U>(service:{new(...o:any[]): T}): U {
+    configure<U>(service:{new(...o:any[]): Configurable<U>}): U {
         let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
         if (!has) return null;
         let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
         return this.container.get(options);
     }
-    /*configure<U>(service:{new(...args:any[]): U}): U {
-        let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
-        if (!has) return null;
-        let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
-        return this.container.get(options);
-    }*/
-
+   
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
         options = options||{paths:{}, middlewares:{}, directories:[], session: true};
@@ -248,13 +243,6 @@ export class Willburg extends Koa implements IApp {
 
     private _initTasks() {
         this._boot.push(new tasks.Middlewares())
-
-        /*let dirs = ['services', 'controllers', 'directories'].map<string>( (e) => {
-           return this._opts.paths[e];
-        }).filter( e => e != null );
-
-        dirs = flatten(dirs);*/
-
         this.boot.push(new tasks.Directory(...this._opts.directories));
         this.boot.push(new tasks.Caching())
         this.boot.push([
