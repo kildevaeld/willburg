@@ -104,6 +104,8 @@ export class Willburg extends Koa implements IApp {
         } else if (metadata.isService(some, ServiceTypes.Task)) {
             if (this.boot) this.boot.pushFront(new tasks.Runner([some]));
         }
+
+        return this;
     }
 
     registerService(service: Function) {
@@ -132,6 +134,8 @@ export class Willburg extends Koa implements IApp {
             debug('register service: "%s"', service.name||name)
             this._container.registerSingleton(name, service);    
         }
+
+        return this;
     }
 
     registerController(controller: Function) {
@@ -158,7 +162,7 @@ export class Willburg extends Koa implements IApp {
 
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
-        if (!routes) return;
+        if (!routes) return this;
 
         let cName = '$controller:' + name;
         debug('register controller: "%s" as %s', name, cName)
@@ -188,6 +192,8 @@ export class Willburg extends Koa implements IApp {
                 router.register(route.path, route.method, middlewares);
             }
         }
+
+        return this;
     }
 
     mount(path: string, middleware: MiddlewareFunc | Willburg | Koa) {

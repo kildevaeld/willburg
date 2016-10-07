@@ -34,9 +34,9 @@ export declare class Willburg extends Koa implements IApp {
     options: WillburgOptions;
     constructor(options?: WillburgOptions);
     use(fn: MiddlewareFunc): this;
-    register(some: any): void;
-    registerService(service: Function): void;
-    registerController(controller: Function): void;
+    register(some: any): this;
+    registerService(service: Function): this;
+    registerController(controller: Function): this;
     mount(path: string, middleware: MiddlewareFunc | Willburg | Koa): void;
     /**
      * Start willburg. This will run the bootstrapper.
