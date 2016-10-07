@@ -42,6 +42,7 @@ export interface WillburgOptions {
 }
 
 export class Willburg extends Koa implements IApp {
+    public name: string;
     private _router: IRouter;
     private _routers: { [key: string]: IRouter };
     private _opts: WillburgOptions

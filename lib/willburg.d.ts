@@ -21,6 +21,7 @@ export interface WillburgOptions {
     name?: string;
 }
 export declare class Willburg extends Koa implements IApp {
+    name: string;
     private _router;
     private _routers;
     private _opts;
