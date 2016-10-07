@@ -18,6 +18,7 @@ export interface WillburgOptions {
     };
     directories?: string[];
     session?: boolean;
+    name?: string;
 }
 export declare class Willburg extends Koa implements IApp {
     private _router;

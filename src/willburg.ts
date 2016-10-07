@@ -38,6 +38,7 @@ export interface WillburgOptions {
     };
     directories?: string[];
     session?: boolean;
+    name?:string;
 }
 
 export class Willburg extends Koa implements IApp {
@@ -83,7 +84,8 @@ export class Willburg extends Koa implements IApp {
         this._routers = {'/': new Router()};
         this._boot = new Bootstrap(this);
 
-        this._initTasks();
+        //this._initTasks();
+        if (options.name) (<any>this).name = options.name;
 
     }
 
@@ -198,11 +200,18 @@ export class Willburg extends Koa implements IApp {
      * @return {Promise<Willburg>}
      */
     async start(): Promise<Willburg> {
-        if (this.boot == null) return this;
-        debug('starting willburg');
+        let name = (<any>this).displayName||(<any>this).name||'willburg';
+        if (this.boot == null) {
+            debug('%s already started', name)
+            return this;
+        }
+        
+        this._initTasks();
+
+        debug('starting %s', name);
         await this.boot.run();
         this._boot = void 0;
-        debug('willburg started');
+        debug('%s started', name);
 
         return this;
     }
@@ -242,7 +251,7 @@ export class Willburg extends Koa implements IApp {
     }
 
     private _initTasks() {
-        this._boot.push(new tasks.Middlewares())
+        this.boot.pushFront(new tasks.Middlewares())
         this.boot.push(new tasks.Directory(...this._opts.directories));
         this.boot.push(new tasks.Caching())
         this.boot.push([
