@@ -1,15 +1,15 @@
 
 import * as Koa from 'koa';
-import {Willburg} from './willburg';
-import {DIContainer} from 'stick.di';
-import {SessionObject} from './middlewares/session';
+import { Willburg } from './willburg';
+import { DIContainer } from 'stick.di';
+import { SessionObject } from './middlewares/session';
 import * as formidable from 'formidable';
-
+import { Stats } from 'fs'
 /*export interface Configurable<T, O> { 
     new(options:O): T
 }*/
 
-export interface Configurable<T> { 
+export interface Configurable<T> {
 }
 
 export interface MultipartResult {
@@ -18,11 +18,20 @@ export interface MultipartResult {
 }
 
 export type File = formidable.File;
-export type Files = {[key: string]: File};
+export type Files = { [key: string]: File };
 
 export interface TypedMultipartResult<T> {
     files: Files;
     fields: T;
+}
+
+export interface SendOptions {
+    maxage?: number;
+    hidden?: boolean;
+    root?: string;
+    gzip?: boolean;
+    format?: boolean;
+    setHeaders?: (res: Koa.Response, path: string, stats: Stats) => void
 }
 
 export interface Context extends Koa.Context {
@@ -33,8 +42,9 @@ export interface Context extends Koa.Context {
     isXHR: boolean;
     readBody<T>(accepts?: string[]): Promise<T>;
     readForm<T>(o?): Promise<TypedMultipartResult<T>>
-    session?:SessionObject|(() => Promise<SessionObject>);
-    links (links:any): any;
+    session?: SessionObject | (() => Promise<SessionObject>);
+    links(links: any): any;
+    send(path: string, options?: SendOptions): Promise<string>;
 }
 
 export interface MiddlewareFunc {
@@ -59,7 +69,7 @@ export interface IRouteOptions {
 }
 
 export interface IRouter {
-    
+
     routes(): MiddlewareFunc;
     allowedMethods(): MiddlewareFunc;
     get(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;
@@ -70,7 +80,7 @@ export interface IRouter {
     head(route: string | RegExp, ...middlewares: MiddlewareFunc[]): IRouter;
     use(path: string | RegExp | MiddlewareFunc, ...middlewares: MiddlewareFunc[]): IRouter;
     prefix(prefix);
-    register(path: string|string[], method:string[], middlewares:MiddlewareFunc[], options?:IRouteOptions)
+    register(path: string | string[], method: string[], middlewares: MiddlewareFunc[], options?: IRouteOptions)
 }
 
 export interface ITask {

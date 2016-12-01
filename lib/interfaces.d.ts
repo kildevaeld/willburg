@@ -3,6 +3,7 @@ import { Willburg } from './willburg';
 import { DIContainer } from 'stick.di';
 import { SessionObject } from './middlewares/session';
 import * as formidable from 'formidable';
+import { Stats } from 'fs';
 export interface Configurable<T> {
 }
 export interface MultipartResult {
@@ -17,6 +18,14 @@ export interface TypedMultipartResult<T> {
     files: Files;
     fields: T;
 }
+export interface SendOptions {
+    maxage?: number;
+    hidden?: boolean;
+    root?: string;
+    gzip?: boolean;
+    format?: boolean;
+    setHeaders?: (res: Koa.Response, path: string, stats: Stats) => void;
+}
 export interface Context extends Koa.Context {
     matched: any[];
     captures: string[];
@@ -29,6 +38,7 @@ export interface Context extends Koa.Context {
     readForm<T>(o?: any): Promise<TypedMultipartResult<T>>;
     session?: SessionObject | (() => Promise<SessionObject>);
     links(links: any): any;
+    send(path: string, options?: SendOptions): Promise<string>;
 }
 export interface MiddlewareFunc {
     (ctx: Context, next?: Function): any;

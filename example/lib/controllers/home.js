@@ -18,6 +18,11 @@ let HomeController = class HomeController extends _1.Controller {
     random(ctx) {
         ctx.body = "Random " + this.rnd.random();
     }
+    send(ctx) {
+        return ctx.send("home.js", {
+            root: __dirname
+        });
+    }
 };
 __decorate([
     _1.decorators.get('/random'), 
@@ -25,6 +30,12 @@ __decorate([
     __metadata('design:paramtypes', [Object]), 
     __metadata('design:returntype', void 0)
 ], HomeController.prototype, "random", null);
+__decorate([
+    _1.decorators.get("/send"), 
+    __metadata('design:type', Function), 
+    __metadata('design:paramtypes', [Object]), 
+    __metadata('design:returntype', void 0)
+], HomeController.prototype, "send", null);
 HomeController = __decorate([
     _1.decorators.controller(), 
     __metadata('design:paramtypes', [random_1.Random])
