@@ -23,7 +23,7 @@ export function RouteFactory ( $container: DIContainer) {
                 let controller = $container.get(controllerName);
 
                 if (controller instanceof Controller) {
-                    fn = (ctx, next) => controller.handleRequest(action, ctx, next);
+                    fn = (ctx, next) => controller.handleRequest(action, ctx, null, next);
                 } else {
                     fn = controller[action].bind(controller);
                 }
