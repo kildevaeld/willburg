@@ -13,10 +13,13 @@ export class Middlewares implements ITask {
   async run(app: Willburg): Promise<void> {
       
       for (let key of ['ErrorHandler', 'Session']) {
-      		if (key == 'Session' && !app.options.session) continue;
+      		if (key == 'Session' && !app.options.session) {
+            debug('skipping session middleware')
+            continue;
+          }
           
           let opts = app.settings.middlewares[key.toLowerCase()];
-          debug('injecting middleware: %s: %j', key.toLowerCase(), opts);
+          debug('injecting middleware: %s: %j', key.toLowerCase(), opts||{});
           app.use(middlewares[key](opts));
       }
 

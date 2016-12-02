@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { EventEmitter } from 'events';
 import { MiddlewareFunc } from '../interfaces';
 export declare type SessionObject = {

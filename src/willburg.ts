@@ -1,22 +1,23 @@
 import './factories/index';
 
 import * as Koa from 'koa';
-import {IRouter, IApp, ITask, MiddlewareFunc, Configurable} from './interfaces';
+import { IRouter, IApp, ITask, MiddlewareFunc, Configurable } from './interfaces';
 import * as iface from './interfaces';
 
-import {flatten} from './utils';
+import { flatten } from './utils';
 import * as tasks from './tasks';
 import * as metadata from './metadata';
-import {ServiceTypes, Factories} from './metadata';
-import {DIContainer, factory} from 'stick.di';
-import {Container} from './container'
-import {RouteFactory} from './factories/route-factory'
-import {Server} from 'http';
-import {Bootstrap} from './bootstrap';
+import { ServiceTypes, Factories } from './metadata';
+import { DIContainer, factory } from 'stick.di';
+import { Container } from './container'
+import { RouteFactory } from './factories/route-factory'
+import { Server } from 'http';
+import { ListenOptions } from 'net'
+import { Bootstrap } from './bootstrap';
 import * as Debug from 'debug';
-import {Context} from './context'
+import { Context } from './context'
 
-import {ValidatorMap, validate} from './validation';
+import { ValidatorMap, validate } from './validation';
 
 const debug = Debug('willburg');
 const Router = require('koa-router');
@@ -38,7 +39,7 @@ export interface WillburgOptions {
     };
     directories?: string[];
     session?: boolean;
-    name?:string;
+    name?: string;
 }
 
 export class Willburg extends Koa implements IApp {
@@ -50,7 +51,7 @@ export class Willburg extends Koa implements IApp {
     private _container: DIContainer;
     private _boot: Bootstrap;
 
-    get boot (): Bootstrap {
+    get boot(): Bootstrap {
         return this._boot;
     }
 
@@ -82,7 +83,7 @@ export class Willburg extends Koa implements IApp {
         this._container = Container //.createChild();
         this._container.registerInstance('container', this._container);
         this._container.registerInstance(Willburg, this);
-        this._routers = {'/': new Router()};
+        this._routers = { '/': new Router() };
         this._boot = new Bootstrap(this);
 
         //this._initTasks();
@@ -90,8 +91,10 @@ export class Willburg extends Koa implements IApp {
 
     }
 
-    use (fn: MiddlewareFunc) {
-        super.use(fn);
+    use(...fn: MiddlewareFunc[]) {
+        for (let i = 0, ii = fn.length; i < ii; i++) {
+            super.use(fn[i]);
+        }
         return this;
     }
 
@@ -129,10 +132,10 @@ export class Willburg extends Koa implements IApp {
         }
 
         if (this._container.hasHandler(name)) {
-            debug('service "%s" already defined', service.name||name);
+            debug('service "%s" already defined', service.name || name);
         } else {
-            debug('register service: "%s"', service.name||name)
-            this._container.registerSingleton(name, service);    
+            debug('register service: "%s"', service.name || name)
+            this._container.registerSingleton(name, service);
         }
 
         return this;
@@ -158,7 +161,7 @@ export class Willburg extends Koa implements IApp {
         }
 
         let validations: ValidatorMap = Reflect.getOwnMetadata(metadata.MetaKeys.Validation, controller);
-        validations = validations||{};
+        validations = validations || {};
 
         let routes = metadata.getService<metadata.RouteDefinition[]>(controller, ServiceTypes.Route);
 
@@ -174,11 +177,11 @@ export class Willburg extends Koa implements IApp {
             let route = routes[i];
 
             let middlewares = (namespace ? namespace.middleware : [])
-            .concat(route.middleware.concat($route(route.action, cName)));
+                .concat(route.middleware.concat($route(route.action, cName)));
 
             if (validations[route.action]) {
                 let m = null;
-                for (let i = 0, ii = validations[route.action].length; i < ii; i++ ) {
+                for (let i = 0, ii = validations[route.action].length; i < ii; i++) {
                     let def = validations[route.action][i];
                     m = validate(def.validator, def.parameter, (m == null ? middlewares : [m]), def.shouldThrow)
                 }
@@ -207,12 +210,12 @@ export class Willburg extends Koa implements IApp {
      * @return {Promise<Willburg>}
      */
     async start(): Promise<Willburg> {
-        let name = (<any>this).displayName||(<any>this).name||'willburg';
+        let name = (<any>this).displayName || (<any>this).name || 'willburg';
         if (this.boot == null) {
             debug('%s already started', name)
             return this;
         }
-        
+
         this._initTasks();
 
         debug('starting %s', name);
@@ -225,35 +228,46 @@ export class Willburg extends Koa implements IApp {
 
     startAndListen(port: number): Promise<Server> {
         return this.start()
-        .then(() => {
-            return this.listen(port);
-        });
+            .then(() => {
+                return this.listen(port);
+            });
     }
 
-    listen(port: number|string, hostname?: string|number|Function, backlog?: number|Function, listeningListener?: Function): Server {
+    listen(): Server;
+    listen(port: number, hostname?: string, backlog?: number, listeningListener?: Function): Server;
+    listen(port: number, hostname?: string, listeningListener?: Function): Server;
+    listen(port: number, backlog?: number, listeningListener?: Function): Server;
+    listen(port: number, listeningListener?: Function): Server;
+    listen(path: string, backlog?: number, listeningListener?: Function): Server;
+    listen(path: string, listeningListener?: Function): Server;
+    listen(handle: any, backlog?: number, listeningListener?: Function): Server;
+    listen(handle: any, listeningListener?: Function): Server;
+    listen(options: ListenOptions, listeningListener?: Function): Server;
+    listen(...args): Server {
+        if (this.boot != null) throw new Error("not started")
         // Mount router sorted by route-path length
         let keys = Object.keys(this._routers);
-        keys.sort( (a, b) => b.length - a.length)
-        for (let i = 0, ii = keys.length; i < ii; i++ ) {
+        keys.sort((a, b) => b.length - a.length)
+        for (let i = 0, ii = keys.length; i < ii; i++) {
             debug('mounting router %s', keys[i]);
             this.use(this._routers[keys[i]].routes());
         }
 
-        return super.listen(<any>port, <any>hostname, <any>backlog, listeningListener);
+        return super.listen.apply(this, args)
 
     }
 
-    configure<U>(service:{new(...o:any[]): Configurable<U>}): U {
+    configure<U>(service: { new (...o: any[]): Configurable<U> }): U {
         let has = Reflect.hasOwnMetadata(metadata.MetaKeys.Options, service);
         if (!has) return null;
         let options = Reflect.getOwnMetadata(metadata.MetaKeys.Options, service);
         return this.container.get(options);
     }
-   
+
 
     private _normalizeOptions(options: WillburgOptions): WillburgOptions {
-        options = options||{paths:{}, middlewares:{}, directories:[], session: true};
-        options = Object.assign({paths:{}, middlewares:{}, directories:[], session:true}, options);
+        options = options || { paths: {}, middlewares: {}, directories: [], session: false };
+        options = Object.assign({ paths: {}, middlewares: {}, directories: [], session: false }, options);
         return options;
     }
 
@@ -262,9 +276,9 @@ export class Willburg extends Koa implements IApp {
         this.boot.push(new tasks.Directory(...this._opts.directories));
         this.boot.push(new tasks.Caching())
         this.boot.push([
-          new tasks.Initializers(),
-          new tasks.Views(),
-          new tasks.Routes()
+            new tasks.Initializers(),
+            new tasks.Views(),
+            new tasks.Routes()
         ]);
     }
 

@@ -48,7 +48,7 @@ export interface Context extends Koa.Context {
 }
 
 export interface MiddlewareFunc {
-    (ctx: Context, next?: Function): any;
+    (ctx: Context, next: () => Promise<any>): any
 }
 
 
@@ -57,7 +57,7 @@ export interface IApp {
     router: IRouter;
     register(a: any);
     container: DIContainer;
-    use(MiddlewareFunc)
+    use(...MiddlewareFunc)
 }
 
 export interface IRouteOptions {

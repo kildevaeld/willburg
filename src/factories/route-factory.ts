@@ -16,15 +16,21 @@ export interface IRouteFactory {
 
 export function RouteFactory ( $container: DIContainer) {
     return function (action: string, controllerName:string): MiddlewareFunc {
-        var controller;
-        return async function(ctx: Context, next?: Function): Promise<any> {
+        var fn: MiddlewareFunc;
+        return function(ctx: Context, next?: () => Promise<any>): Promise<any> {
             debug('calling %s on %s', action, controllerName);
-            if (!controller)
-                controller = $container.get(controllerName);
-            if (controller instanceof Controller) {
-                return await controller.handleRequest(action, ctx, next);
-            } 
-            return await controller[action].call(controller, ctx, next);
+            if (!fn) {
+                let controller = $container.get(controllerName);
+
+                if (controller instanceof Controller) {
+                    fn = (ctx, next) => controller.handleRequest(action, ctx, next);
+                } else {
+                    fn = controller[action].bind(controller);
+                }
+            }
+                
+            return fn(ctx, next);
+            
         };
     };
 }

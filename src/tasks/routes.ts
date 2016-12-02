@@ -27,7 +27,7 @@ export class Routes implements ITask {
             });
         } catch (e) {
             if (e.code == 'ENOENT') {
-             debug('path %s doest not exists: %s', path, e);
+             debug('path %s doest not exists', path);
              return;
             }
             

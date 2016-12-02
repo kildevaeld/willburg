@@ -18,10 +18,13 @@ export class Views implements ITask {
       let con = app.container;
       
       if (!con.hasHandler(Variables.ViewRoot)) {
+        
         app.container.registerInstance(Variables.ViewRoot, path);    
       } if (!con.hasHandler(Variables.ViewEngine)) {
+        
         app.container.registerInstance(Variables.ViewEngine, 'html');    
       }
-
+      debug("view root: %s", con.get(Variables.ViewRoot))
+      debug("view engine: %s", con.get(Variables.ViewEngine))
   }
 }

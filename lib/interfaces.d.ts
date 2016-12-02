@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as Koa from 'koa';
 import { Willburg } from './willburg';
 import { DIContainer } from 'stick.di';
@@ -41,14 +42,14 @@ export interface Context extends Koa.Context {
     send(path: string, options?: SendOptions): Promise<string>;
 }
 export interface MiddlewareFunc {
-    (ctx: Context, next?: Function): any;
+    (ctx: Context, next: () => Promise<any>): any;
 }
 export interface IApp {
     settings: any;
     router: IRouter;
     register(a: any): any;
     container: DIContainer;
-    use(MiddlewareFunc: any): any;
+    use(...MiddlewareFunc: any[]): any;
 }
 export interface IRouteOptions {
     end?: boolean;

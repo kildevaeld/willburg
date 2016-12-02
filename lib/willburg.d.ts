@@ -1,8 +1,10 @@
+/// <reference types="node" />
 import './factories/index';
 import * as Koa from 'koa';
 import { IRouter, IApp, MiddlewareFunc, Configurable } from './interfaces';
 import { DIContainer } from 'stick.di';
 import { Server } from 'http';
+import { ListenOptions } from 'net';
 import { Bootstrap } from './bootstrap';
 export interface WillburgPaths {
     initializers?: string;
@@ -27,13 +29,13 @@ export declare class Willburg extends Koa implements IApp {
     private _opts;
     private _container;
     private _boot;
-    boot: Bootstrap;
-    router: IRouter;
-    settings: WillburgOptions;
-    container: DIContainer;
-    options: WillburgOptions;
+    readonly boot: Bootstrap;
+    readonly router: IRouter;
+    readonly settings: WillburgOptions;
+    readonly container: DIContainer;
+    readonly options: WillburgOptions;
     constructor(options?: WillburgOptions);
-    use(fn: MiddlewareFunc): this;
+    use(...fn: MiddlewareFunc[]): this;
     register(some: any): this;
     registerService(service: Function): this;
     registerController(controller: Function): this;
@@ -46,7 +48,16 @@ export declare class Willburg extends Koa implements IApp {
      */
     start(): Promise<Willburg>;
     startAndListen(port: number): Promise<Server>;
-    listen(port: number | string, hostname?: string | number | Function, backlog?: number | Function, listeningListener?: Function): Server;
+    listen(): Server;
+    listen(port: number, hostname?: string, backlog?: number, listeningListener?: Function): Server;
+    listen(port: number, hostname?: string, listeningListener?: Function): Server;
+    listen(port: number, backlog?: number, listeningListener?: Function): Server;
+    listen(port: number, listeningListener?: Function): Server;
+    listen(path: string, backlog?: number, listeningListener?: Function): Server;
+    listen(path: string, listeningListener?: Function): Server;
+    listen(handle: any, backlog?: number, listeningListener?: Function): Server;
+    listen(handle: any, listeningListener?: Function): Server;
+    listen(options: ListenOptions, listeningListener?: Function): Server;
     configure<U>(service: {
         new (...o: any[]): Configurable<U>;
     }): U;

@@ -32,7 +32,7 @@ export class Directory implements ITask {
 
             } catch (e) {
                 if (e.code == 'ENOENT') {
-                    debug('path %s doest not exists: %s', this.paths[i], e);
+                    debug('path %s doest not exists', this.paths[i]);
                     continue;
                 }
                 debug("Error %s in %s", e, e.path, this.paths[i])
@@ -40,6 +40,5 @@ export class Directory implements ITask {
             }
         }
 
-        return
     }
 }
