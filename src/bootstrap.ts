@@ -17,7 +17,8 @@ export class Bootstrap {
 
     push(task: ITask | ITask[], ...tasks: ITask[]) {
         if (this._frozen) throw new Error('bootstrap already runned');
-        if (this._running) throw new Error('cannot mutate bootstrapper when running');
+        //if (this._running) throw new Error('cannot mutate bootstrapper when running');
+        
         if (!Array.isArray(task)) task = [<ITask>task];
         tasks = (<ITask[]>task).concat(tasks);
 
@@ -31,7 +32,7 @@ export class Bootstrap {
 
     pushFront(task: ITask | ITask[], ...tasks: ITask[]) {
         if (this._frozen) throw new Error('bootstrap already runned');
-        if (this._running) throw new Error('cannot mutate bootstrapper when running');
+        //if (this._running) throw new Error('cannot mutate bootstrapper when running');
 
         if (!Array.isArray(task)) task = [<ITask>task];
         tasks = (<ITask[]>task).concat(tasks);
