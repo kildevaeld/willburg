@@ -10,6 +10,7 @@ const send = require('koa-send');
 export const Context: i.Context = _context;
 
 
+
 Object.defineProperties(_context, {
     "isXHR": {
         get: function () {

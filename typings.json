@@ -8,7 +8,10 @@
     "joi": "registry:dt/joi",
     "koa": "registry:dt/koa",
     "koa-router": "registry:dt/koa-router",
-    "mz": "registry:dt/mz",
+    "mz": "registry:dt/mz#0.0.0+20160811111312",
     "node": "registry:dt/node"
+  },
+  "globalDevDependencies": {
+    "typescript": "registry:dt/typescript#0.4.0+20160317120654"
   }
 }
