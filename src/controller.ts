@@ -33,8 +33,8 @@ export class Controller extends EventEmitter {
             this._dirty = false;
         } else if (middlewares && middlewares.length) {
             debug('composing dynamic action %s:%s', this.constructor.name, action);
-            let m = this._stack.concat(middlewares);
-            fn = compose(m, this[action].bind(this));
+            let m = this._stack.concat(middlewares).concat(this[action].bind(this));
+            fn = compose(m);
         } else {
             fn = this._methods[action];
         }
