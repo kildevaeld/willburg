@@ -7,5 +7,5 @@ export declare class Controller extends EventEmitter {
     private _methods;
     private _dirty;
     use(...fns: MiddlewareFunc[]): this;
-    handleRequest(action: string, ctx: Context, next: () => Promise<any>): Promise<any>;
+    handleRequest(action: string, ctx: Context, middlewares: MiddlewareFunc[], next: () => Promise<any>): Promise<any>;
 }
