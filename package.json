@@ -1,6 +1,6 @@
 {
   "name": "willburg",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,8 +20,8 @@
     "debug": "^2.3.3",
     "formidable": "^1.0.17",
     "joi": "^8.4.2",
-    "koa": "^2.0.0",
-    "koa-compose": "^3.2.1",
+    "koa": "^2.2.0",
+    "koa-compose": "^4.0.0",
     "koa-conditional-get": "^1.0.3",
     "koa-convert": "^1.2.0",
     "koa-etag": "^3.0.0",
